@@ -1,10 +1,11 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
-function Navbar() {
+function Navbar({className}) {
     return (
-        <div className=' flex bg-dark-grayish-blue shadow-md h-14 items-center text-xl text-white justify-between px-10 w-full'>
+        <div className={` flex ${className}  shadow-md h-14 items-center text-xl text-white justify-between px-20 w-full`}>
             <div className=' text-light-gray'>
-                CodeLink
+                <NavLink to={'/'} >CodeLink</NavLink>
             </div>
             <div className=' text-light-gray pl-5'>
                 <ul className=' flex gap-5'>

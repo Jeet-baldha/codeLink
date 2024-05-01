@@ -1,15 +1,18 @@
 import React from 'react'
+import Home from './Pages/Home'
 import Navbar from './Components/Navbar'
-import Sidebar from './Components/Sidebar'
-import CodeEditor from './Components/CodeEditor'
+import Footer from './Components/Footer'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   return (
-    <div className=' w-full h-screen bg-dark-grayish-blue'>
-      <Navbar />
-      <Sidebar />
-      <CodeEditor />
-    </div>  
+    <>
+      <div className='gredient'>
+      <Navbar  />
+        <Outlet />
+      <Footer />
+      </div>
+    </> 
   )
 }
 
