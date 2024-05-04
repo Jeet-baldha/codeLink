@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoIosCloseCircle } from "react-icons/io";
 import Select from 'react-select'
 
@@ -19,8 +19,13 @@ function Setting({width,setWidth}) {
         { value: 'css', label: 'css' },
     ]
 
+
+    const style = {
+        width:width+'px',
+    }
+
     return (
-        <div className={`w-${width} overflow-hidden  text-white bg-dark-blue-black h-full py-10 duration-200 `}>
+        <div style={style} className={`overflow-hidden  text-white bg-dark-blue-black h-full py-10 duration-200 `}>
             <div className='flex text-xl py-2 items-center justify-between px-5'>
                 <h1 className=' text-2xl font-bold text-light-bluish-green ' >Seeting</h1>
                 <IoIosCloseCircle className=' hover:cursor-pointer text-2xl'  onClick={ () => setWidth(0)}/>

@@ -1,17 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import bgv from '../Images/code-2858768_1280.png'
 import Navbar from '../Components/Navbar.jsx'
 import UseCaseCard from '../Components/UseCaseCard.jsx'
 import LanguageCard from '../Components/LanguageCard.jsx'
 import '../index.css'
 import { NavLink } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function Home() {
 
+    const navigate = useNavigate();
 
-    const handleClick = () => {
-        
+    const [endurl,setendurl] = useState("");
+
+    const handleClick = async () => {
+        const result = await axios.get('http://localhost:3000/geturl');
+        setendurl(result.data);  
     }
+    
+    useEffect(() => {
+        endurl && navigate('/code/'+endurl);      
+    },[endurl,navigate]);
 
     return (
         <div className=' text-white'>
@@ -19,7 +29,7 @@ function Home() {
                 <div className='py-52 px-20 bg-ba'>
                 <h1 className=' text-5xl text-white font-bold '>Welcome to CodeLink: Your Real-Time Code Sharing Platform</h1>
                 <h1 className=' py-5 text-xl'>Code together, in real-time, with anyone, anywhere</h1>
-                <button className=' px-3 py-2 border-white border-2 rounded-sm mt-5 text-white'><NavLink to={'/code/editor'} onClick={handleClick}>Share Now</NavLink></button>
+                <button className=' px-3 py-2 border-white border-2 rounded-sm mt-5 text-white' onClick={handleClick}>Share Now</button>
                 <p  className=' pt-2 text-sm'>Share code for free.</p>
                 </div>
                 <div className=' p-20'>

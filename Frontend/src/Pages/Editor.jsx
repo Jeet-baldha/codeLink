@@ -3,10 +3,17 @@ import { io } from 'socket.io-client'
 import AceEditor from "react-ace";
 import Sidebar from '../Components/Sidebar'
 import debounce from 'lodash.debounce'
+import { useParams } from 'react-router-dom';
+import ace from 'ace-builds';
+
+
+// Set the base path for Ace editor
+ace.config.set('basePath', '');
 
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
+import ShareLink from '../Components/ShareLink';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -16,14 +23,17 @@ function Editor() {
     const socket = io(ENDPOINT, {
     });
 
+    const roomId = useParams().id;
     useEffect(() => {
+
         socket.on('codeChange', (newCode) => {
             setCode(newCode); // Update the code state
         });
 
-        // Handle reconnection events
+
         socket.on('connect', () => {
-            console.log('Connected to server');
+            // console.log('Connected to server');
+            socket.emit('room', roomId);
         });
         // Cleanup function
         return () => {
@@ -34,7 +44,7 @@ function Editor() {
     }, [socket]);
 
     const handleChange = debounce(newCode => {
-        socket.emit('codeChange', newCode);
+        socket.emit('codeChange', newCode,roomId);
     }, 1000)
 
 
@@ -49,7 +59,7 @@ function Editor() {
 
 
     return (
-        <div className=' w-full h-dvh flex'>
+        <div className=' w-full h-full flex'>
             <AceEditor
                 mode="javascript"
                 placeholder=" write your code here..."
@@ -71,6 +81,9 @@ function Editor() {
                 }}
             />
             <Sidebar />
+            <div>
+                <ShareLink />
+            </div>
         </div>
     )
 }

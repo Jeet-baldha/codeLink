@@ -24,7 +24,7 @@ const route = createBrowserRouter([
     element: <App2 />,
     children:[
       {
-        path:'/code/editor',
+        path:'/code/:id',
         element:<Editor />
       }
     ]

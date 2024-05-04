@@ -2,6 +2,8 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import crypto from 'crypto'
+import endlUrl from './Controller/endlUrl.js';
 
 const app = express();
 app.use(cors());
@@ -18,21 +20,25 @@ app.get('/', (req, res) => {
 });
 
 
+
+
+app.get('/geturl',endlUrl)
+
+
 io.on('connection', (socket) => {
-    console.log('A user connected');
 
+    socket.on('room', (room) => {
+        socket.join(room);
+    })
 
+    socket.on('codeChange', (code,room) => {
+        io.to(room).emit('codeChange',code)
+    })
+    // console.log(socket);
     socket.on('disconnect', () => {
-        console.log('A user disconnected');
+        // console.log('A user disconnected');
     });
 
-    socket.on('codeChange', (code) => {
-        console.log(code);
-        // Broadcast the received code to all clients, including the sender
-        io.emit('codeChange', code); // Update latestCode with the received code
-    });
-
-    // Handle the client's request for the latest code
 });
 
 server.listen(3000, () => {

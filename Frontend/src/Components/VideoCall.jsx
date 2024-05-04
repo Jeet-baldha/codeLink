@@ -2,8 +2,12 @@ import React from 'react'
 import { IoIosCloseCircle,IoIosMic,IoMdVideocam,IoMdCall } from 'react-icons/io'
 
 function VideoCall({width,setWidth}) {
+
+    const style = {
+        width:width+'px',
+    }
     return (
-        <div className={`w-${width}   text-white bg-dark-blue-black h-full pt-10 duration-200 overflow-auto `}>
+        <div style={style} className={` text-white bg-dark-blue-black h-full pt-10 duration-200 overflow-auto `}>
 
             <div className='flex text-xl py-2 items-center justify-between px-5'>
                 <h1 className=' text-2xl font-bold text-light-bluish-green ' >Video Cam</h1>

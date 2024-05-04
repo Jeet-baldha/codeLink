@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom'
 function App2() {
     return (
         <>
-            <div className='gredient'>
+            <div className='gredient h-screen'>
                 <Navbar className= ' bg-dark-grayish-blue' />
                 <Outlet />
             </div>
