@@ -1,15 +1,12 @@
 import crypto from 'crypto'
-
-
-
-let activeUrl = [];
-
+import createRoom from './createRoom.js';
 
 const endlUrl = (req,res) => {
 
-    const isUniuqe = true;
     let url = crypto.randomBytes(3).toString('hex');
-    activeUrl.push(url);    
+
+    createRoom(url);
+
     res.send(url);
 
 }

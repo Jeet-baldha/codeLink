@@ -12,9 +12,8 @@ import themes from '../Data/Themes.js';
 import languages from '../Data/Language.js';
 
 
-// Set the base path for Ace editor
-// import "ace-builds/src-noconflict/theme-monocai"
 ace.config.set('basePath', '');
+
 const importThemes = async () => {
     try {
         // Import all themes dynamically
@@ -58,7 +57,6 @@ const ENDPOINT = 'http://localhost:3000';
 
 function Editor() {
 
-    const dispactch = useDispatch();
     const theme = useSelector((state) => state.user.theme);
     const language = useSelector((state) => state.user.language);
     const fontSize = useSelector((state) => state.user.fontSize);
@@ -66,19 +64,11 @@ function Editor() {
     const [font,setFont] = useState(14);
 
     useEffect(() => {
-        console.log(theme);
-        console.log(language);
-        console.log(fontSize);
         setFont(fontSize);
-    }, [theme,language,fontSize])
+    }, [fontSize])
 
     const [code, setCode] = useState("");
-    const socket = io(ENDPOINT, {
-    });
-
-    useEffect(() => {
-        console.log(font)
-    },[font])
+    const socket = io(ENDPOINT);
 
 
     const roomId = useParams().id;
@@ -87,10 +77,10 @@ function Editor() {
         socket.on('connect', () => {
             // console.log('Connected to server');
             socket.emit('room', roomId);
-        });
+        }); 
 
         socket.on('codeChange', (newCode) => {
-            setCode(newCode); // Update the code state
+            setCode(newCode);
         });
 
         // Cleanup function
@@ -107,6 +97,11 @@ function Editor() {
     }, 1000)
 
 
+    const handleEditorChange = debounce ( (newCode, editor) => {
+        // Check if the change event is triggered by autocomplete
+        console.log(editor)
+        console.log(editor.lines.join('\n'));
+    },);
 
 
     // const handleChange = (newCode) => {
@@ -118,7 +113,7 @@ function Editor() {
 
 
     return (
-        <div className=' w-full h-full flex'>
+        <div className=' w-full h-full flex overflow-hidden'>
             <AceEditor
                 mode={language}
                 placeholder=" write your code here..."
@@ -136,7 +131,7 @@ function Editor() {
                 setOptions={{
                     enableBasicAutocompletion: true,
                     enableLiveAutocompletion: true,
-                    enableSnippets: true
+                    enableSnippets: true,
                 }}
             />
             <div>

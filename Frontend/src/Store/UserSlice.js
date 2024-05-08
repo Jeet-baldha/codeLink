@@ -2,9 +2,9 @@ import {createSlice } from '@reduxjs/toolkit'
 
 const intialState = {
     userName : '',
-    language :'',
-    fontSize : 14,
-    theme: 'ambiance',
+    language : '',
+    fontSize :14,
+    theme: 'chrome' ,
     loginStatus :'',
     userId:'',
     roomId:''

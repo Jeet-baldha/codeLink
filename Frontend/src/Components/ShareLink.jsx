@@ -6,9 +6,7 @@ function ShareLink({ endUrl , setOpenCodeLinkBox}) {
 
     const copyLink = () => {
 
-        navigator.clipboard.writeText(`http://localhost:5173/code/${endUrl}`).then(toast.success("Link Copied to clipboard", {
-
-        }))
+        navigator.clipboard.writeText(`http://localhost:5173/code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
 
     }
 

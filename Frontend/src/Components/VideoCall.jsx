@@ -9,6 +9,9 @@ function VideoCall({width,setWidth}) {
     return (
         <div style={style} className={` text-white bg-dark-blue-black h-full pt-10 duration-200 overflow-auto `}>
 
+        <div className=' text-center bg-white opacity-15'>
+            <h1 className=' text-3xl text-black font-bold'> Avialable soon</h1>
+        </div>
             <div className='flex text-xl py-2 items-center justify-between px-5'>
                 <h1 className=' text-2xl font-bold text-light-bluish-green ' >Video Cam</h1>
                 <IoIosCloseCircle className=' hover:cursor-pointer text-2xl'  onClick={ () => setWidth(0)}/>

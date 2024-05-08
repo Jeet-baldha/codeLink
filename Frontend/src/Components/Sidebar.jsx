@@ -5,12 +5,14 @@ import Setting from './Setting';
 import VideoCall from './VideoCall';
 import ShareLink from './ShareLink';
 import { useParams } from 'react-router-dom';
+import Feedback from './Feedback';
 
 function Sidebar({textData}) {
 
     const [Settingwidth, setSettingWidth] = useState(0);
     const [videoCallwidth, setVideoCallWidth] = useState(0);
     const [openCodeLinkBox, setOpenCodeLinkBox] = useState(false);
+    const [openFeedback, setOpenFeedback] = useState(false);
 
     const roomId = useParams().id;
 
@@ -52,7 +54,7 @@ function Sidebar({textData}) {
                         <IoMdSettings />
                     </div>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
-                        <MdError />
+                        <MdError onClick={ () => setOpenFeedback(true)} />
                     </div>
                 </div>
 
@@ -65,6 +67,9 @@ function Sidebar({textData}) {
             </div>
             <div>
                 {openCodeLinkBox && <ShareLink endUrl={roomId} setOpenCodeLinkBox={setOpenCodeLinkBox} />}
+            </div>
+            <div>
+                {openFeedback && <Feedback setOpenFeedback={setOpenFeedback} />}
             </div>
 
         </div>
