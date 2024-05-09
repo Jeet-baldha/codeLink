@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function ShareLink({ endUrl , setOpenCodeLinkBox}) {
 
     const copyLink = () => {
-        navigator.clipboard.writeText(`http://localhost:5173/code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
+        navigator.clipboard.writeText(`https://codelink-frontend.onrender.com//code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
     }
 
     return (

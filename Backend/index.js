@@ -19,7 +19,7 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://codelink.jeetbaldha.tech"
+        origin: "https://codelink-frontend.onrender.com/"
     }
 });
 
