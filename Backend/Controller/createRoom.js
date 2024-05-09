@@ -10,7 +10,6 @@ const createRoom = async (roomId) => {
             code:compressedCode
         });
         await newRoom.save();
-        console.log("Room created successfully.");
     } catch (error) {
         console.error("Error creating room:", error);
     }

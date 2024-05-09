@@ -14,9 +14,9 @@ function Footer() {
                     </ul>
                 </div>
                 <div>
-                    <ul>
+                    <ul className=' text-xl font-semibold'>
                         <li className=' list-disc'>Terms of Service</li>
-                        <li className=' list-disc'>Privacy Policy</li>
+                        <li className=' list-disc pt-5'>Privacy Policy</li>
                     </ul>
                 </div>
             </div>

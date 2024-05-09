@@ -9,8 +9,8 @@ function VideoCall({width,setWidth}) {
     return (
         <div style={style} className={` text-white bg-dark-blue-black h-full pt-10 duration-200 overflow-auto `}>
 
-        <div className=' text-center bg-white opacity-15'>
-            <h1 className=' text-3xl text-black font-bold'> Avialable soon</h1>
+        <div className=' text-center bg-black p-2'>
+            <h1 className=' text-3xl text-white font-bold'> Avialable soon</h1>
         </div>
             <div className='flex text-xl py-2 items-center justify-between px-5'>
                 <h1 className=' text-2xl font-bold text-light-bluish-green ' >Video Cam</h1>
@@ -19,6 +19,7 @@ function VideoCall({width,setWidth}) {
 
             <div className=' p-5 flex flex-col gap-5 overflow-y-auto'>
                 <div className=' bg-dark-grayish-blue h-40 rounded-sm' ></div>
+                <div className=' bg-dark-grayish-blue h-40 rounded-sm' ></div>    
                 <div className=' bg-dark-grayish-blue h-40 rounded-sm' ></div>    
             </div>
 

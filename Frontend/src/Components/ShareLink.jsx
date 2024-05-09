@@ -5,14 +5,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function ShareLink({ endUrl , setOpenCodeLinkBox}) {
 
     const copyLink = () => {
-
         navigator.clipboard.writeText(`http://localhost:5173/code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
-
     }
 
     return (
         <div className=' absolute w-screen h-screen flex justify-center items-center top-0 right-0 bg-gray-200 bg-opacity-20 z-50'>
-            <div className=' w-96 bg-dark-grayish-blue text-white h-80 z-10  rounded-sm'  >
+            <div className=' w-96 bg-dark-grayish-blue text-white h-80 z-10  rounded-sm'>
                 <div className=' float-right mt-2 mr-2 hover:cursor-pointer' onClick={ () => setOpenCodeLinkBox(false)}><IoIosCloseCircle className=' text-3xl' /></div>
                 <div className=' mt-6 p-5'>
                     <h1 className=' pb-2 text-3xl'>Share Code</h1>

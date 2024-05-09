@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -7,9 +8,13 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import Room from './Model/Room.js';
 import zlib from 'zlib';
+import checkUrl from './Controller/checkUrl.js';
 
 const app = express();
+const port = process.env.PORT || 3000;
 app.use(cors());
+
+
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -18,9 +23,10 @@ const io = new Server(server, {
     }
 });
 
-mongoose.connect('mongodb://localhost:27017/codeLink');
+mongoose.connect(process.env.MONGODB_URL);
 
-app.use(express.urlencoded({ extended:false}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.send("Welcome");
@@ -28,6 +34,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/geturl',endlUrl)
+app.post('/checkUrl',checkUrl)
 
 
 io.on('connection', (socket) => {
@@ -63,6 +70,6 @@ io.on('connection', (socket) => {
 
 });
 
-server.listen(3000, () => {
-    console.log('listening on 3000');
+server.listen(port, () => {
+    console.log('listening on ',port);
 });
