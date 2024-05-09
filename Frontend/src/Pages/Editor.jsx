@@ -53,7 +53,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import axios from 'axios';
 
 
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = 'https://codelink-lyor.onrender.com';
 
 
 
@@ -82,7 +82,7 @@ function Editor() {
         }
 
         try {
-            const result = await axios.post('http://localhost:3000/checkUrl', url);
+            const result = await axios.post('https://codelink-lyor.onrender.com/checkUrl', url);
     
             if (result.data === true) {
                 setValidRoom(true)

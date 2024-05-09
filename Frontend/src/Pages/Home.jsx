@@ -11,7 +11,7 @@ function Home() {
     const [endurl,setendurl] = useState("");
 
     const handleClick = async () => {
-        const result = await axios.get('http://localhost:3000/geturl');
+        const result = await axios.get('https://codelink-lyor.onrender.com/geturl');
         setendurl(result.data);  
     }
     
