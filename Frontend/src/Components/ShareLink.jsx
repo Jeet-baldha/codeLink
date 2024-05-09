@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function ShareLink({ endUrl , setOpenCodeLinkBox}) {
 
     const copyLink = () => {
-        navigator.clipboard.writeText(`https://codelink-frontend.onrender.com//code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
+        navigator.clipboard.writeText(`https://codelink.jeetbaldha.tech/code/${endUrl}`).then(toast.success("Link Copied to clipboard"))
     }
 
     return (
@@ -17,7 +17,7 @@ function ShareLink({ endUrl , setOpenCodeLinkBox}) {
                     <p className=' pb-2 '>Anyone with access to this URL will see your code in real time.</p>
                     <p className=' text-xl text-gray-500 pb-3'>Share this URL</p>
                     <div className=' text-black flex'>
-                        <input readOnly value={`http://localhost:5173/code/${endUrl}`} className=' w-full p-2 rounded-sm' />
+                        <input readOnly value={`https://codelink.jeetbaldha.tech/code/${endUrl}`} className=' w-full p-2 rounded-sm' />
                         <div className=' text-white text-4xl font-bold hover:cursor-pointer' onClick={copyLink}>
                             <IoMdCopy />
                         </div>
