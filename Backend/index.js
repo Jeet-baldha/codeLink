@@ -14,8 +14,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
 
-
-
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -41,10 +39,6 @@ io.on('connection', (socket) => {
     socket.on('room', async (room) => {
         socket.join(room);
         try {
-            const compressCode  = await Room.findOne({ roomId: room });
-
-            const roomData  = zlib.gunzipSync(compressCode.code).toString();
-
             io.to(room).emit('codeChange', roomData);
         } catch (error) {
             console.error("Error finding room:", error);
@@ -54,8 +48,6 @@ io.on('connection', (socket) => {
     socket.on('codeChange', async (code,room) => {
 
         try {
-            const compressedCode = zlib.gzipSync(code);
-            await Room.updateOne({ roomId: room }, { code: compressedCode });
             io.to(room).emit('codeChange', code);
 
         } catch (error) {
@@ -64,10 +56,7 @@ io.on('connection', (socket) => {
 
     })
     // console.log(socket); 
-    socket.on('disconnect', () => {
-        
-    });
-
+    socket.on('disconnect');
 });
 
 server.listen(port, () => {
