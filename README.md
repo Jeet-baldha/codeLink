@@ -79,7 +79,47 @@ The server can be configured by editing the environment variables in the `.env` 
 
     PORT=3000
     MONGODB_URL=your_mongodb_connection_string
-  
+
+### Tailwind CSS Configuration
+
+Tailwind CSS is used for styling the frontend. Follow these steps to set it up:
+
+1. Install Tailwind CSS via npm:
+
+    ```bash
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+    ```
+
+2. Configure your `tailwind.config.js` file:
+
+    ```js
+    /** @type {import('tailwindcss').Config} */
+    module.exports = {
+      content: [
+        "./src/**/*.{js,jsx,ts,tsx}",
+      ],
+      theme: {
+        extend: {},
+      },
+      plugins: [],
+    }
+    ```
+
+3. Add the Tailwind directives to your CSS file (e.g., `src/index.css`):
+
+    ```css
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+4. Ensure your CSS file is imported in your `src/main.jsx` or `src/main.tsx`:
+
+    ```js
+    import './index.css';
+    ```
+
 
 ## API Endpoints
 
