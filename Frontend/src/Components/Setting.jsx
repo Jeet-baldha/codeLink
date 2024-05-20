@@ -15,10 +15,13 @@ function Setting({ width, setWidth }) {
     const theme = useSelector((state) => state.user.theme)
 
     const dispatch = useDispatch();
-    const [selectedTheme, setSelectedTheme] = useState({"value": "chrome", "label": "Chrome"});
+    const [selectedTheme, setSelectedTheme] = useState( themes.find( item => item.value == theme));
     const [selectedLanguage, setSelectedLanguage] = useState( { "value": "plaintext", "label": "Plain Text" });
 
 
+    useEffect(() => {
+       console.log(selectedTheme); 
+    },[])
 
     const handleLanguageChange = (selectedValue) => {
         dispatch(updateUserDetails({ language: selectedValue.value }))

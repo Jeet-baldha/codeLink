@@ -45,8 +45,7 @@ const importLanguages = async () => {
 };
 
 // Call the functions to import themes and languages
-importThemes();
-importLanguages();
+
 
 
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -56,8 +55,12 @@ import axios from 'axios';
 const ENDPOINT = 'http://localhost:3000';
 
 
+    await importThemes();
+    await importLanguages();
 
 function Editor() {
+
+
 
     const theme = useSelector((state) => state.user.theme);
     const language = useSelector((state) => state.user.language);
@@ -137,11 +140,6 @@ function Editor() {
     },);
 
 
-    // const handleChange = (newCode) => {
-    //     setCode(newCode);
-    //     // Emit a codeChange event to the server when the code changes
-    //     console.log(newCode);
-    // };
 
 
 
@@ -164,7 +162,7 @@ function Editor() {
                 setOptions={{
                     enableBasicAutocompletion: true,
                     enableLiveAutocompletion: true,
-                    enableSnippets: true,
+                    enableSnippets: true, 
                 }}
             />
             <div>

@@ -1,6 +1,6 @@
-import React, { useState,useRef,useEffect } from 'react'
-import { IoIosCloseCircle, IoIosMic, IoMdCall, IoIosMicOff,  } from 'react-icons/io'
-import { MdVideocamOff , MdVideocam} from 'react-icons/md';
+import React, { useState, useRef, useEffect } from 'react'
+import { IoIosCloseCircle, IoIosMic, IoMdCall, IoIosMicOff, } from 'react-icons/io'
+import { MdVideocamOff, MdVideocam } from 'react-icons/md';
 
 
 function VideoCall({ width, setWidth }) {
@@ -11,30 +11,47 @@ function VideoCall({ width, setWidth }) {
     }
 
     const [mystream, setmystream] = useState(null);
-    const [videoswitch, setvideo] = useState(false);
-    const [audioswitch, setaudio] = useState(false);
+    const [videoswitch, setvideo] = useState(true);
+    const [audioswitch, setaudio] = useState(true);
+    const [videoBtn, setvideobtn] = useState(false);
 
     const myvideo = useRef(null);
 
 
-
-    const handleWecam = () => {
-
-        if(mystream !== null){
-            setmystream(null)
+    useEffect(() => {
+        if (videoBtn) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    myvideo.current.srcObject = stream;
+                    myvideo.current.autoplay = true;
+                    myvideo.current.muted = false;
+                    setmystream(stream);
+                    setaudio(true);
+                    setvideo(true);
+                });
         }
         else{
-            navigator.mediaDevices
-            .getUserMedia({ video: true, audio: true })
-            .then((stream) => {
-                myvideo.current.srcObject = stream;
-                myvideo.current.autoplay = true;
-                myvideo.current.muted = false;
-                setmystream(stream);
-                setaudio(true);
-                setvideo(true);
-            });
+            mystream && mystream.getTracks().forEach((track) => track.stop());
+            setaudio(false);
+            setvideo(false);
+            console.log('no hek')
         }
+
+    }, [videoBtn])
+
+    useEffect(() => {
+        if(mystream && mystream.active){
+            setaudio(true);
+            setvideo(true);
+            console.log(mystream);
+            console.log('hek')
+        }
+    },[]);
+
+    const handleWebCam = () => {
+
+        setvideobtn(!videoBtn);
 
     }
 
@@ -78,8 +95,6 @@ function VideoCall({ width, setWidth }) {
     };
 
     const handleCloseBtn = () => {
-        handleAudio();
-        handleVideo();
         setWidth(0);
     }
 
@@ -96,20 +111,20 @@ function VideoCall({ width, setWidth }) {
 
             <div className=' p-5 flex flex-col gap-5 overflow-y-auto'>
                 <div className=' bg-dark-grayish-blue rounded-sm w-full aspect-video' >
-                    <video ref={myvideo} autoPlay muted className=''></video>
+                    <video ref={myvideo} autoPlay muted className=''></video> 
                 </div>
             </div>
 
             <div className=' sticky bottom-1 z-50 shadow-lg text-3xl flex justify-between px-10 bg-dark-blue-black  text-white py-3 outline-1'>
 
-                <div onClick={handleAudio} className=' hover:cursor-pointer'>                                     
+                <button onClick={handleAudio} className=' hover:cursor-pointer'  disabled={!videoBtn}>
                     {audioswitch ? <IoIosMic /> : <IoIosMicOff />}
-                </div>
-                <div onClick={handleVideo} className=' hover:cursor-pointer text-3xl'>
-                    {videoswitch ? <MdVideocam className=' text-4xl' />: <MdVideocamOff className=' text-4xl' />}
-                </div>
-                
-                <IoMdCall className={` ${mystream ? 'bg-red-700' : 'bg-green-700' } rounded-full hover:cursor-pointer`} onClick={ handleWecam}  />
+                </button>
+                <button onClick={handleVideo} className=' hover:cursor-pointer text-3xl' disabled={!videoBtn}>
+                    {videoswitch ? <MdVideocam className=' text-4xl' /> : <MdVideocamOff className=' text-4xl' />}
+                </button>
+
+                <IoMdCall className={` ${mystream ? 'bg-red-700' : 'bg-green-700'} rounded-full hover:cursor-pointer`} onClick={handleWebCam} />
             </div>
 
         </div>

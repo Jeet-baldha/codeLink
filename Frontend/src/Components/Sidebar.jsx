@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { IoMdSettings, IoMdLink, IoMdDownload, IoMdVideocam, } from "react-icons/io";
 import { MdError } from "react-icons/md";
@@ -23,12 +24,12 @@ function Sidebar({textData}) {
 
     const handleDownload = () => {
         const blob = new Blob([textData], { type: 'text/plain' });
-
+        console.log(textData);
         // Create download link
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'file.txt';
+        a.download = Date.now().toString() + ".html";
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

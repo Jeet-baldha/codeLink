@@ -4,7 +4,7 @@ const intialState = {
     userName : '',
     language : '',
     fontSize :14,
-    theme: 'chrome' ,
+    theme: localStorage.getItem('theme') || 'chrome' ,
     loginStatus :'',
     userId:'',
     roomId:''
