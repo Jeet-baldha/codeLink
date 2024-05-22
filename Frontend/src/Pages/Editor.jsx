@@ -10,7 +10,6 @@ import { updateUserDetails } from '../Store/UserSlice.js';
 import { useSelector } from 'react-redux';
 import themes from '../Data/Themes.js';
 import languages from '../Data/Language.js';
-import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 

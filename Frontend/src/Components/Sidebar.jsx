@@ -7,6 +7,7 @@ import VideoCall from './VideoCall';
 import ShareLink from './ShareLink';
 import { useParams } from 'react-router-dom';
 import Feedback from './Feedback';
+import NVideoCall from './NVedioCall';
 
 function Sidebar({textData}) {
 
@@ -64,7 +65,7 @@ function Sidebar({textData}) {
                 <Setting width={Settingwidth} setWidth={setSettingWidth} />
             </div>
             <div>
-                <VideoCall width={videoCallwidth} setWidth={setVideoCallWidth} ></VideoCall>
+                <NVideoCall width={videoCallwidth} setWidth={setVideoCallWidth} ></NVideoCall>
             </div>
             <div>
                 {openCodeLinkBox && <ShareLink endUrl={roomId} setOpenCodeLinkBox={setOpenCodeLinkBox} />}

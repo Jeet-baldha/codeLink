@@ -61,10 +61,20 @@ io.on('connection', (socket) => {
         }
 
     })
-    // console.log(socket); 
-    socket.on('disconnect', () => {
 
+    socket.on('join-room', (roomId) => {
+        socket.join(roomId);
+
+        socket.on('send-peer-id', async (data) => {
+           
+        });
+
+        socket.on('disconnect', () => {
+            io.to(roomId).emit('user-disconnected', socket.id);
+        });
     });
+
+    // console.log(socket); 
 
 });
 
