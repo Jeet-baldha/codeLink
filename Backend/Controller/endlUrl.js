@@ -5,8 +5,7 @@ let activeUrl = ['1212'];
 
 const endlUrl = (req,res) => {
 
-    let url = crypto.randomBytes(3).toString('hex');
-    createRoom(url);
+    let url = crypto.randomBytes(8).toString('hex');
     activeUrl.push(url);
     res.send(url);
 

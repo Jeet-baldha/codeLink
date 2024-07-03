@@ -35,7 +35,6 @@ function Setting({ width, setWidth }) {
 
     const updateFontState = debounce( fontSize => {
         dispatch(updateUserDetails({ fontSize: Number(fontSize)}))
-        console.log(fontSize);
     },1000)
 
     const handleFontSize = (e) => {

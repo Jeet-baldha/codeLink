@@ -9,6 +9,10 @@ import bodyParser from 'body-parser';
 import Room from './Model/Room.js';
 import zlib from 'zlib';
 import checkUrl from './Controller/checkUrl.js';
+import createRoom from './Controller/createRoom.js';
+import updateRoomMember from './Controller/updateRoomMember.js';
+import updatePeerId from './Controller/updatePeerId.js';
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,11 +38,22 @@ app.get('/', (req, res) => {
 
 app.get('/geturl',endlUrl)
 app.post('/checkUrl',checkUrl)
+app.post('/updatePeerId',updatePeerId)
 
 
 io.on('connection', (socket) => {
     socket.on('room', async (room) => {
         socket.join(room);
+        const clientId = socket.id;
+    
+        try {
+            if(io.sockets.adapter.rooms.get(room).size === 1){
+                createRoom(room,clientId)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
         try {
             const compressCode  = await Room.findOne({ roomId: room });
 
@@ -62,19 +77,12 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('join-room', (roomId) => {
-        socket.join(roomId);
 
-        socket.on('send-peer-id', async (data) => {
-           
-        });
-
-        socket.on('disconnect', () => {
-            io.to(roomId).emit('user-disconnected', socket.id);
-        });
+    socket.on('sendPeer', (room, peerId) => {
+        console.log(`Received sendPeer event. Room: ${room}, peerId: ${peerId}`);
+        io.to(room).emit('sendPeer', peerId);
+        console.log(`Sent peerId ${peerId} to room ${room}`);
     });
-
-    // console.log(socket); 
 
 });
 

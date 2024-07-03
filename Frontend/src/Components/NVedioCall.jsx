@@ -3,11 +3,12 @@ import { IoIosCloseCircle, IoIosMic, IoMdCall, IoIosMicOff } from 'react-icons/i
 import { MdVideocamOff, MdVideocam } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { Peer } from 'peerjs';
+import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3000');
 
 function NVideoCall({ width, setWidth }) {
+    const socket = io('http://localhost:3000');
     const style = {
         width: width + 'px',
     };
@@ -16,56 +17,68 @@ function NVideoCall({ width, setWidth }) {
     const [videoswitch, setVideoSwitch] = useState(true);
     const [audioswitch, setAudioSwitch] = useState(true);
     const [videoBtn, setVideoBtn] = useState(false);
-    const [remotePeerId, setRemotePeerId] = useState(''); 
-    const myVideoRef = useRef(null)
-
     const { id: roomID } = useParams(); // Extract the unique room ID from the URL
     const [peerId, setPeerId] = useState('');
     const peerInstance = useRef(null);
     const currentUserVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
+    const [remoteStreamData, setRemoteStreamData] = useState([])
+
+    const peer = new Peer();
+    useEffect(() => {
+        // Ensure peer is initialized properly before sending 'sendPeer' event
+        if (peer && roomID) {
+            peer.on('open', (id) => {
+                setPeerId(id);
+                socket.emit('sendPeer', roomID, id);
+            });
+    
+            peer.on('call', (call) => {
+                navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                    .then((mediaStream) => {
+                        currentUserVideoRef.current.srcObject = mediaStream;
+                        currentUserVideoRef.current.muted = false;
+                        currentUserVideoRef.current.play();
+                        call.answer(mediaStream);
+                        call.on('stream', (remoteStream) => {
+                            remoteVideoRef.current.srcObject = remoteStream;
+                            setVideoBtn(true);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error accessing media devices:', error);
+                    });
+            });
+    
+            peerInstance.current = peer;
+        }
+    }, [peer, roomID]);
+
 
     useEffect(() => {
-        const peer = new Peer();
+        // Event listener for 'sendPeer' event
+        const handleSendPeer = (peerId) => {
+            console.log('Received peerId:', peerId);
+            // Handle peerId as needed
+        };
 
-        peer.on('open', (id) => {
-            setPeerId(id)
-            socket.emit('join-room',roomID);
-            socket.emit('send-peer-id',roomID);
+        socket.on('codeChange', (newCode) => {
+            console.log(newCode);
         });
+    
+        // Register event listener
+        socket.on('sendPeer', handleSendPeer);
+    
+        // Clean up: Unregister event listener
+        return () => {
+            socket.off('sendPeer', handleSendPeer);
+        };
+    }, [socket]);
 
-        peer.on('call', (call) => {
-            var getUserMedia = navigator.getUserMedia
-                || navigator.webkitGetUserMedia
-                || navigator.mozGetUserMedia;
+ 
 
-            getUserMedia({ video: true, audio: true }, (mediaStream) => {
-                currentUserVideoRef.current.srcObject = mediaStream;
-                currentUserVideoRef.current.muted = false;
-                currentUserVideoRef.current.play();
-                call.answer(mediaStream)
-                call.on('stream', function (remoteStream) {
-                    remoteVideoRef.current.srcObject = remoteStream
-                    remoteVideoRef.current.play();
-                    setVideoBtn(true);
-                });
-            });
-        })
-        peerInstance.current = peer;
-    }, [])
-
-
-    const callPeer = () => {
-        console.log(remotePeerId);
-
-        if(remotePeerId === ''){
-            return
-        }
-
-
-        console.log(audioswitch, videoswitch);
-
-            navigator.mediaDevices
+    const callPeer = (remotePeerId) => {
+        navigator.mediaDevices
             .getUserMedia({ video: videoswitch, audio: audioswitch })
             .then((stream) => {
                 currentUserVideoRef.current.srcObject = stream;
@@ -73,19 +86,20 @@ function NVideoCall({ width, setWidth }) {
                 currentUserVideoRef.current.muted = true;
                 setMystream(stream);
                 setVideoBtn(!videoBtn)
+
                 currentUserVideoRef.current.play();
 
                 const call = peerInstance.current.call(remotePeerId, stream);
-    
-                call.on('stream', (remoteStream) => {
+
+                call.on('stream', function (remoteStream) {
                     remoteVideoRef.current.srcObject = remoteStream;
-                    remoteVideoRef.current.play();
-                    setVideoBtn(!videoBtn);
+                    setRemoteStreamData([...remoteStreamData, remoteStream]);
+                    setVideoBtn(true);
                 });
             });
     };
-    
-    
+
+
 
     useEffect(() => {
         if (videoBtn) {
@@ -99,19 +113,9 @@ function NVideoCall({ width, setWidth }) {
                     setAudioSwitch(true);
                     setVideoSwitch(true);
                 });
-        } else {
-            console.log('no hek');
         }
     }, [videoBtn]);
 
-    // useEffect(() => {
-    //     if (mystream && mystream.active) {
-    //         setAudioSwitch(true);
-    //         setVideoSwitch(true);
-    //         console.log(mystream);
-    //         console.log('hek');
-    //     }
-    // }, []);
 
     const handleWebCam = () => {
         setVideoBtn(!videoBtn);
@@ -133,8 +137,6 @@ function NVideoCall({ width, setWidth }) {
                 }
             });
         }
-
-        callPeer();
     };
     const handleAudio = () => {
         if (audioswitch) {
@@ -152,13 +154,22 @@ function NVideoCall({ width, setWidth }) {
                 }
             });
         }
-
-        callPeer();
     };
 
     const handleCloseBtn = () => {
         setWidth(0);
     };
+
+
+    useEffect(() => {
+        remoteStreamData.map((stream,index) => {
+            const videoElement = document.getElementById(`video-${index}`);
+            console.log(stream);
+        if (videoElement) {
+            videoElement.srcObject = stream;
+        }
+        })
+    },[remoteStreamData])
 
     return (
         <div style={style} className={`text-white bg-dark-blue-black h-full pt-10 duration-200 overflow-auto`}>
@@ -170,17 +181,25 @@ function NVideoCall({ width, setWidth }) {
             <h2>My Peer ID: {peerId}</h2>
             <input type="text" id="peerIdInput" placeholder="Enter peer ID to call" />
             <button onClick={() => {
-                const id = document.getElementById('peerIdInput').value;
-                console.log(id);
-                setRemotePeerId(id)
-                callPeer(id);
+                const remotePeerId = document.getElementById('peerIdInput').value;
+                callPeer(remotePeerId);
             }}>Call Peer</button>
             <div className='p-5 flex flex-col gap-5 overflow-y-auto'>
-                <div className='bg-dark-grayish-blue rounded-sm w-full aspect-video'>
-                    <video ref={remoteVideoRef} autoPlay muted className=''></video>
-                </div>
+                {/* <div className='bg-dark-grayish-blue rounded-sm w-full aspect-video'>
+                    {remoteStreamData.map((strem, index) => {
+                        <video
+                            key={index}
+                            id={`video-${index}`}
+                            autoPlay
+                            muted
+                        />
+                    })}
+                </div> */}
                 <div className='bg-dark-grayish-blue rounded-sm w-full aspect-video'>
                     <video ref={currentUserVideoRef} autoPlay muted className=''></video>
+                </div>
+                <div className='bg-dark-grayish-blue rounded-sm w-full aspect-video'>
+                    <video ref={remoteVideoRef} autoPlay muted className=''></video>
                 </div>
             </div>
             <div className='sticky bottom-1 z-50 shadow-lg text-3xl flex justify-between px-10 bg-dark-blue-black text-white py-3 outline-1'>

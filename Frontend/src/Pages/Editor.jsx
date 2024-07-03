@@ -132,11 +132,11 @@ function Editor() {
     }, 1000)
 
 
-    const handleEditorChange = debounce((newCode, editor) => {
-        // Check if the change event is triggered by autocomplete
-        console.log(editor)
-        console.log(editor.lines.join('\n'));
-    },);
+    // const handleEditorChange = debounce((newCode, editor) => {
+    //     // Check if the change event is triggered by autocomplete
+    //     console.log(editor)
+    //     console.log(editor.lines.join('\n'));
+    // },);
 
 
 
