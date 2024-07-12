@@ -59,8 +59,6 @@ const ENDPOINT = 'http://localhost:3000';
 
 function Editor() {
 
-
-
     const theme = useSelector((state) => state.user.theme);
     const language = useSelector((state) => state.user.language);
     const fontSize = useSelector((state) => state.user.fontSize);
@@ -100,34 +98,39 @@ function Editor() {
 
     }
 
-    useEffect(() => {
-        if(roomId){ 
-            checkUrl();
-        }
-    }, [roomId])
+    // useEffect(() => {
+    //     if(roomId){ 
+    //         checkUrl();
+    //     }
+    // }, [roomId])
 
     useEffect(() => {
 
-        socket.on('codeChange', (newCode) => {
-            setCode(newCode);
-        });
-
-        if(validRoom == true){
-            socket.on('connect', () => {
-                // console.log('Connected to server');
-                socket.emit('room', roomId);
+            socket.on('codeChange', (newCode) => {
+                console.log(newCode);
+                setCode(newCode);
             });
-        }
+    
+            
+                socket.on('connect', () => {
+                    console.log('Connected to server');
+                    socket.emit('room', roomId);
+                });
+            
+        
+        
         // Cleanup function
         return () => {
             // Remove event listeners when component unmounts
             socket.off('codeChange');
             socket.off('connect');
         };
+        
 
     }, [socket,roomId,validRoom]);
 
     const handleChange = debounce(newCode => {
+        // console.log(newCode);
         socket.emit('codeChange', newCode, roomId);
     }, 1000)
 

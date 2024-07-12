@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 
 
 function NVideoCall({ width, setWidth }) {
-    const socket = io('http://localhost:3000');
+    // const socket = io('http://localhost:3000');
     const style = {
         width: width + 'px',
     };
@@ -30,7 +30,7 @@ function NVideoCall({ width, setWidth }) {
         if (peer && roomID) {
             peer.on('open', (id) => {
                 setPeerId(id);
-                socket.emit('sendPeer', roomID, id);
+                // socket.emit('sendPeer', roomID, id);
             });
     
             peer.on('call', (call) => {
@@ -52,28 +52,28 @@ function NVideoCall({ width, setWidth }) {
     
             peerInstance.current = peer;
         }
-    }, [peer, roomID]);
+    }, [roomID]);
 
 
-    useEffect(() => {
-        // Event listener for 'sendPeer' event
-        const handleSendPeer = (peerId) => {
-            console.log('Received peerId:', peerId);
-            // Handle peerId as needed
-        };
+    // useEffect(() => {
+    //     // Event listener for 'sendPeer' event
+    //     const handleSendPeer = (peerId) => {
+    //         console.log('Received peerId:', peerId);
+    //         // Handle peerId as needed
+    //     };
 
-        socket.on('codeChange', (newCode) => {
-            console.log(newCode);
-        });
+    //     socket.on('codeChange', (newCode) => {
+    //         console.log(newCode);
+    //     });
     
-        // Register event listener
-        socket.on('sendPeer', handleSendPeer);
+    //     // Register event listener
+    //     socket.on('sendPeer', handleSendPeer);
     
-        // Clean up: Unregister event listener
-        return () => {
-            socket.off('sendPeer', handleSendPeer);
-        };
-    }, [socket]);
+    //     // Clean up: Unregister event listener
+    //     return () => {
+    //         socket.off('sendPeer', handleSendPeer);
+    //     };
+    // }, [socket]);
 
  
 

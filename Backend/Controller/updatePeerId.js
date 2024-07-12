@@ -2,12 +2,8 @@ import Room from "../Model/Room.js";
 
 
 const updatePeerId = async(req,res) =>{
-
-    console.log(req.body);
     const roomId = req.body.roomID;
     const peerId = req.body.peerID;
-    console.log(roomId, " " , peerId);
-
     try {
         
         const room = await Room.findOne({roomId:roomId});

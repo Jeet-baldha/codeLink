@@ -8,6 +8,9 @@ import ShareLink from './ShareLink';
 import { useParams } from 'react-router-dom';
 import Feedback from './Feedback';
 import NVideoCall from './NVedioCall';
+import fileExtensions from '../Data/FileExtension';
+import userSlice from '../Store/UserSlice';
+import { useSelector } from 'react-redux';
 
 function Sidebar({textData}) {
 
@@ -15,22 +18,25 @@ function Sidebar({textData}) {
     const [videoCallwidth, setVideoCallWidth] = useState(0);
     const [openCodeLinkBox, setOpenCodeLinkBox] = useState(false);
     const [openFeedback, setOpenFeedback] = useState(false);
-
     const roomId = useParams().id;
-
+    const selectedLanguage = useSelector( (state) => state.user.language);
+    
     useEffect(() => {
         setSettingWidth(0);
         setVideoCallWidth(0);
     }, [])
-
+    
     const handleDownload = () => {
         const blob = new Blob([textData], { type: 'text/plain' });
-        console.log(textData);
+        
+        const extension = fileExtensions.find( (language) => language.value === selectedLanguage).extension;
+        console.log(extension);
         // Create download link
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = Date.now().toString() + ".html";
+
+        a.download = Date.now().toString() + extension;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

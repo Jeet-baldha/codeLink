@@ -5,10 +5,10 @@ import zlib from 'zlib';
 const createRoom = async (roomId,clientId) => {
     console.log("Creating room");
     try {
-        const compressedCode = zlib.gzipSync("Welcome to codeLink");
+        // const compressedCode = zlib.gzipSync("Welcome to codeLink");
         const newRoom = new Room({
             roomId: roomId,
-            code:compressedCode,
+            code:"Hello Moto",
             members: [clientId],
             peerId:null
         });

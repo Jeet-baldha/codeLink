@@ -48,27 +48,27 @@ io.on('connection', (socket) => {
     
         try {
             if(io.sockets.adapter.rooms.get(room).size === 1){
-                createRoom(room,clientId)
+                // createRoom(room,clientId)
             }
         } catch (error) {
             console.log(error);
         }
 
-        try {
-            const compressCode  = await Room.findOne({ roomId: room });
+        // try {
+        //     const compressCode  = await Room.findOne({ roomId: room });
 
-            const roomData  = zlib.gunzipSync(compressCode.code).toString();
+        //     // const roomData  = zlib.gunzipSync(compressCode.code).toString();
 
-            io.to(room).emit('codeChange', roomData);
-        } catch (error) {
-            console.error("Error finding room:", error);
-        }
+        //     io.to(room).emit('codeChange', cod);
+        // } catch (error) {
+        //     console.error("Error finding room:", error);
+        // }
     })
     socket.on('codeChange', async (code,room) => {
 
         try {
-            const compressedCode = zlib.gzipSync(code);
-            await Room.updateOne({ roomId: room }, { code: compressedCode });
+            // const compressedCode = zlib.gzipSync(code);
+            // await Room.updateOne({ roomId: room }, { code: compressedCode });
             io.to(room).emit('codeChange', code);
 
         } catch (error) {
