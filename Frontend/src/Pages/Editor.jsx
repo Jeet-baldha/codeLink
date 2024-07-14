@@ -1,158 +1,105 @@
-import React, { useEffect, useState } from 'react'
-import { io } from 'socket.io-client'
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import AceEditor from "react-ace";
-import Sidebar from '../Components/Sidebar'
-import debounce from 'lodash.debounce'
+import Sidebar from '../Components/Sidebar/Sidebar.jsx';
+import debounce from 'lodash.debounce';
 import { useNavigate, useParams } from 'react-router-dom';
-import ace from 'ace-builds';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateUserDetails } from '../Store/UserSlice.js';
-import { useSelector } from 'react-redux';
 import themes from '../Data/Themes.js';
 import languages from '../Data/Language.js';
 import 'react-toastify/dist/ReactToastify.css';
-
-
-
-const importThemes = async () => {
-    try {
-        // Import all themes dynamically
-        for (const theme of themes) {
-            // @vite-ignore
-            const themeName = theme.value;
-            await import(`ace-builds/src-noconflict/theme-${themeName}`);
-        }
-        console.log('All themes have been imported successfully');
-    } catch (error) {
-        console.error('Error importing themes:', error);
-    }
-};
-
-const importLanguages = async () => {
-    try {
-        // Import all languages dynamically
-        for (const language of languages) {
-            // @vite-ignore
-            const languageName = language.value;
-            await import(`ace-builds/src-noconflict/mode-${languageName}`);
-            await import(`ace-builds/src-noconflict/snippets/${languageName}`)
-        }
-        console.log('All languages have been imported successfully');
-    } catch (error) {
-        console.error('Error importing languages:');
-    }
-};
-
-// Call the functions to import themes and languages
-
-
-
-import "ace-builds/src-noconflict/ext-language_tools";
 import axios from 'axios';
+
 
 
 const ENDPOINT = 'http://localhost:3000';
 
+async function importThemes() {
+    try {
+        await Promise.all(themes.map(theme => 
+            import(`ace-builds/src-noconflict/theme-${theme.value}`)
+        ));
+        console.log('All themes have been imported successfully');
+    } catch (error) {
+        console.error('Error importing themes:', error);
+    }
+}
 
-    await importThemes();
-    await importLanguages();
+async function importLanguages() {
+    try {
+        await Promise.all(languages.map(language => 
+            Promise.all([
+                import(`ace-builds/src-noconflict/mode-${language.value}`),
+                import(`ace-builds/src-noconflict/snippets/${language.value}`)
+            ])
+        ));
+        console.log('All languages have been imported successfully');
+    } catch (error) {
+        console.error('Error importing languages:', error);
+    }
+}
+
+importThemes();
+importLanguages();
 
 function Editor() {
-
     const theme = useSelector((state) => state.user.theme);
     const language = useSelector((state) => state.user.language);
     const fontSize = useSelector((state) => state.user.fontSize);
     const roomId = useParams().id;
     const [validRoom, setValidRoom] = useState(false);
-    const navigate = useNavigate();
-
-    const [font, setFont] = useState(14);
-
-    useEffect(() => {
-        setFont(fontSize);
-    }, [fontSize])
-
+    const [font, setFont] = useState(fontSize);
     const [code, setCode] = useState("");
     const socket = io(ENDPOINT);
 
-    const checkUrl = async () => {
-
-        const url = {
-            url: roomId
-        }
-
-        try {
-            const result = await axios.post('http://localhost:3000/checkUrl', url);
-    
-            if (result.data === true) {
-                setValidRoom(true)
-            }
-            else {
-                setValidRoom(false)
-                navigate('/');
-                alert('Invalid URL')
-            }
-        } catch (error) {
-            alert(error.message);
-        }
-
-    }
+    const navigate = useNavigate();
 
     // useEffect(() => {
-    //     if(roomId){ 
-    //         checkUrl();
-    //     }
-    // }, [roomId])
+    //     const checkUrl = async () => {
+    //         const url = { url: roomId };
+    //         try {
+    //             const result = await axios.post('http://localhost:3000/checkUrl', url);
+    //             setValidRoom(result.data);
+    //             if (!result.data) {
+    //                 alert('Invalid URL');
+    //                 navigate('/');
+    //             }
+    //         } catch (error) {
+    //             alert(error.message);
+    //         }
+    //     };
+
+    //     checkUrl();
+    // }, [roomId, navigate]);
 
     useEffect(() => {
+        const handleCodeChange = (newCode) => setCode(newCode);
+        
+        socket.on('codeChange', handleCodeChange);
+        
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            socket.emit('room', roomId);
+        });
 
-            socket.on('codeChange', (newCode) => {
-                console.log(newCode);
-                setCode(newCode);
-            });
-    
-            
-                socket.on('connect', () => {
-                    console.log('Connected to server');
-                    socket.emit('room', roomId);
-                });
-            
-        
-        
-        // Cleanup function
         return () => {
-            // Remove event listeners when component unmounts
-            socket.off('codeChange');
+            socket.off('codeChange', handleCodeChange);
             socket.off('connect');
         };
-        
+    }, [roomId]);
 
-    }, [socket,roomId,validRoom]);
-
-    const handleChange = debounce(newCode => {
-        // console.log(newCode);
+    const handleChange = debounce((newCode) => {
         socket.emit('codeChange', newCode, roomId);
-    }, 1000)
-
-
-    // const handleEditorChange = debounce((newCode, editor) => {
-    //     // Check if the change event is triggered by autocomplete
-    //     console.log(editor)
-    //     console.log(editor.lines.join('\n'));
-    // },);
-
-
-
-
+    }, 500);
 
     return (
-        <div className=' w-full h-full flex overflow-hidden'>
+        <div className='w-full h-full flex overflow-hidden'>
             <AceEditor
                 mode={language}
-                placeholder=" write your code here..."
+                placeholder="Write your code here..."
                 theme={theme}
                 wrapEnabled={true}
-                defaultValue=''
                 value={code}
                 fontSize={font}
                 enableLiveAutocompletion={true}
@@ -171,7 +118,10 @@ function Editor() {
                 <Sidebar textData={code} />
             </div>
         </div>
-    )
+    );
 }
 
-export default Editor
+// Import themes and languages
+
+
+export default Editor;

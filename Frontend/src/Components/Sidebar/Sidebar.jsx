@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import { IoMdSettings, IoMdLink, IoMdDownload, IoMdVideocam, } from "react-icons/io";
-import { MdError } from "react-icons/md";
-import Setting from './Setting';
-import VideoCall from './VideoCall';
-import ShareLink from './ShareLink';
 import { useParams } from 'react-router-dom';
-import Feedback from './Feedback';
-import NVideoCall from './NVedioCall';
-import fileExtensions from '../Data/FileExtension';
-import userSlice from '../Store/UserSlice';
 import { useSelector } from 'react-redux';
+import userSlice from '../../Store/UserSlice';
+import { MdError } from "react-icons/md";
+import { IoMdSettings, IoMdLink, IoMdDownload, IoMdVideocam, } from "react-icons/io";
+import Setting from '../Sidebar/Setting';
+import VideoCall from '../Sidebar/VideoCall';
+import ShareLink from '../Sidebar/ShareLink';
+import Feedback from '../Sidebar/Feedback';
+import NVideoCall from '../Sidebar/NVedioCall';
+import fileExtensions from '../../Data/FileExtension';
 
 function Sidebar({textData}) {
 

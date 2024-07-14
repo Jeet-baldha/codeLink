@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { IoIosCloseCircle } from "react-icons/io";
 import Select from 'react-select'
-import { updateUserDetails } from '../Store/UserSlice.js'
+import { updateUserDetails } from '../../Store/UserSlice.js'
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import languages from '../Data/Language.js';
+import languages from '../../Data/Language.js';
 import debounce from 'lodash.debounce';
-import themes from '../Data/Themes.js';
+import themes from '../../Data/Themes.js';
 
 function Setting({ width, setWidth }) {
 

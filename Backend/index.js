@@ -3,11 +3,9 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import redis from 'redis'
 import endlUrl from './Controller/endlUrl.js';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import Room from './Model/Room.js';
-import zlib from 'zlib';
 import checkUrl from './Controller/checkUrl.js';
 import createRoom from './Controller/createRoom.js';
 import updateRoomMember from './Controller/updateRoomMember.js';
@@ -20,6 +18,12 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 const server = http.createServer(app);
+const redisClient = redis.createClient({
+    url: 'redis://127.0.0.1:6379'
+});
+
+
+
 const io = new Server(server, {
     cors: {
         origin: '*'
@@ -40,52 +44,77 @@ app.get('/geturl',endlUrl)
 app.post('/checkUrl',checkUrl)
 app.post('/updatePeerId',updatePeerId)
 
+redisClient.on('connect', () => {
+    console.log('Connected to Redis');
+});
 
-io.on('connection', (socket) => {
-    socket.on('room', async (room) => {
-        socket.join(room);
-        const clientId = socket.id;
+redisClient.on('error', (err) => {
+    console.error('Redis error:', err);
+});
+
+(async () => {
+    await redisClient.connect();
+    io.on('connection', (socket) => {
     
-        try {
-            if(io.sockets.adapter.rooms.get(room).size === 1){
-                // createRoom(room,clientId)
+    
+        socket.on('room', async (room) => {
+            socket.join(room);
+            try {
+                if(io.sockets.adapter.rooms.get(room).size === 1){
+    
+                    await redisClient.set(room,"Hello world")
+                    socket.broadcast.to(room).emit("codeChange","Hello world");
+                    console.log("user in room");
+    
+                }
+                else{
+                    const newCode = await redisClient.get(room);
+                    socket.broadcast.to(room).emit('codeChange',newCode);
+                        
+                        
+                }
+                
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
+            
+            // try {
+                //     const compressCode  = await Room.findOne({ roomId: room });
+                
+                //     // const roomData  = zlib.gunzipSync(compressCode.code).toString();
+                
+                //     io.to(room).emit('codeChange', cod);
+                // } catch (error) {
+                    //     console.error("Error finding room:", error);
+                    // }
+                })
+                socket.on('codeChange', async (code,room) => {
+                    
+                    try {
+                        // const compressedCode = zlib.gzipSync(code);
+                        // await Room.updateOne({ roomId: room }, { code: compressedCode });
+                        await redisClient.set(room,code)    
+                        socket.broadcast.to(room).emit('codeChange',code);
+                        
+                    } catch (error) {
+                        console.error("Error updating code:", error);
+                    }
+                    
+                })
+                
+                
+                socket.on('sendPeer', (room, peerId) => {
+                    console.log(`Received sendPeer event. Room: ${room}, peerId: ${peerId}`);
+                    io.to(room).emit('sendPeer', peerId);
+                    console.log(`Sent peerId ${peerId} to room ${room}`);
+                });
+                
+            });
+})();
+        
+        
 
-        // try {
-        //     const compressCode  = await Room.findOne({ roomId: room });
-
-        //     // const roomData  = zlib.gunzipSync(compressCode.code).toString();
-
-        //     io.to(room).emit('codeChange', cod);
-        // } catch (error) {
-        //     console.error("Error finding room:", error);
-        // }
-    })
-    socket.on('codeChange', async (code,room) => {
-
-        try {
-            // const compressedCode = zlib.gzipSync(code);
-            // await Room.updateOne({ roomId: room }, { code: compressedCode });
-            io.to(room).emit('codeChange', code);
-
-        } catch (error) {
-            console.error("Error updating code:", error);
-        }
-
-    })
-
-
-    socket.on('sendPeer', (room, peerId) => {
-        console.log(`Received sendPeer event. Room: ${room}, peerId: ${peerId}`);
-        io.to(room).emit('sendPeer', peerId);
-        console.log(`Sent peerId ${peerId} to room ${room}`);
-    });
-
-});
-
-server.listen(port, () => {
-    console.log('listening on ',port);
-});
+        server.listen(port, () => {
+            console.log('listening on ',port);
+        });
+        
