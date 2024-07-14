@@ -152,6 +152,7 @@ Creates a new room with a unique URL.
   - Express
   - Socket.io
   - Mongoose
+  - Redis
 
 ## Contributing
 
