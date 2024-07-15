@@ -8,6 +8,9 @@ import Editor from './Pages/Editor.jsx'
 import App2 from './App2.jsx'
 import { Provider } from 'react-redux'
 import store from './Store/store.js'
+import Login from './Pages/AuthPage/Login.jsx'
+import SignUp from './Pages/AuthPage/SignUp.jsx'
+import AuthLayout from './AuthLayout.jsx'
 
 const route = createBrowserRouter([
   {
@@ -27,6 +30,20 @@ const route = createBrowserRouter([
       {
         path: '/code/:id',
         element: <Editor />
+      }
+    ]
+  },
+  {
+    path: '/auth',
+    element: <AuthLayout />,
+    children: [
+      {
+        path: '/auth/login',
+        element: <Login />
+      },
+      {
+        path: '/auth/signup',
+        element: <SignUp />
       }
     ]
   }

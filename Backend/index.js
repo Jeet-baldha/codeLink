@@ -61,17 +61,12 @@ redisClient.on('error', (err) => {
             socket.join(room);
             try {
                 if(io.sockets.adapter.rooms.get(room).size === 1){
-    
                     await redisClient.set(room,"Hello world")
-                    socket.broadcast.to(room).emit("codeChange","Hello world");
-                    console.log("user in room");
-    
+                    io.to(room).emit("codeChange","Hello world")
                 }
                 else{
                     const newCode = await redisClient.get(room);
-                    socket.broadcast.to(room).emit('codeChange',newCode);
-                        
-                        
+                    io.to(room).emit('codeChange',newCode);       
                 }
                 
             } catch (error) {
@@ -88,14 +83,16 @@ redisClient.on('error', (err) => {
                     //     console.error("Error finding room:", error);
                     // }
                 })
+
                 socket.on('codeChange', async (code,room) => {
                     
                     try {
                         // const compressedCode = zlib.gzipSync(code);
                         // await Room.updateOne({ roomId: room }, { code: compressedCode });
+                        console.log("before");
                         await redisClient.set(room,code)    
                         socket.broadcast.to(room).emit('codeChange',code);
-                        
+                        console.log(code); 
                     } catch (error) {
                         console.error("Error updating code:", error);
                     }

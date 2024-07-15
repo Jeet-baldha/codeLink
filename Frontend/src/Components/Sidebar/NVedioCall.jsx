@@ -24,9 +24,9 @@ function NVideoCall({ width, setWidth }) {
     const remoteVideoRef = useRef(null);
     const [remoteStreamData, setRemoteStreamData] = useState([])
 
-    const peer = new Peer();
-    useEffect(() => {
-        // Ensure peer is initialized properly before sending 'sendPeer' event
+    // const peer = new Peer();
+
+    const callRecive = () => {
         if (peer && roomID) {
             peer.on('open', (id) => {
                 setPeerId(id);
@@ -52,7 +52,7 @@ function NVideoCall({ width, setWidth }) {
     
             peerInstance.current = peer;
         }
-    }, [roomID]);
+    }
 
 
     // useEffect(() => {

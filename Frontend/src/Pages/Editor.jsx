@@ -40,6 +40,8 @@ async function importLanguages() {
     }
 }
 
+// Import themes and languages
+
 importThemes();
 importLanguages();
 
@@ -91,7 +93,12 @@ function Editor() {
 
     const handleChange = debounce((newCode) => {
         socket.emit('codeChange', newCode, roomId);
-    }, 500);
+    }, 1000);
+
+
+    useEffect(() => {
+        console.log(fontSize);
+    },[fontSize])
 
     return (
         <div className='w-full h-full flex overflow-hidden'>
@@ -109,9 +116,9 @@ function Editor() {
                 height='100%'
                 editorProps={{ $blockScrolling: true }}
                 setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: true, 
+                    
+                    enableLiveAutocompletion: false,
+                    enableSnippets: false, 
                 }}
             />
             <div>
@@ -120,8 +127,6 @@ function Editor() {
         </div>
     );
 }
-
-// Import themes and languages
 
 
 export default Editor;

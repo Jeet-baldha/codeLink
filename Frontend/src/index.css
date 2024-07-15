@@ -7,3 +7,8 @@
     background: rgb(0,0,0);
 background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(34,40,49,1) 50%, rgba(0,0,0,1) 100%);
 }
+
+.login-gredient{
+    background: rgb(34,40,49);
+    background: linear-gradient(133deg, rgba(34,40,49,1) 0%, rgba(63,77,78,1) 50%, rgba(40,37,37,1) 100%);
+}
