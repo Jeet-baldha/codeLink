@@ -10,7 +10,7 @@ import checkUrl from './Controller/checkUrl.js';
 import createRoom from './Controller/createRoom.js';
 import updateRoomMember from './Controller/updateRoomMember.js';
 import updatePeerId from './Controller/updatePeerId.js';
-
+import Auth from './Routes/AuthRoute.js'
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +34,7 @@ mongoose.connect(process.env.MONGODB_URL);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/auth',Auth);  
 
 app.get('/', (req, res) => {
     res.send("Welcome");
