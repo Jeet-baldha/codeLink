@@ -21,7 +21,10 @@ function Login() {
 
         try {
             const data = await axios.post('http://localhost:3000/auth/login',inputData);
-            alert(data.data);
+            alert(data.data.message);
+            if(data.data.jsonwebtoken){
+                localStorage.setItem('authToken',data.data.jsonwebtoken);
+            }
         } catch (error) {
             alert(error.message);
         }
