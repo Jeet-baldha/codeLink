@@ -61,12 +61,12 @@ redisClient.on('error', (err) => {
         socket.on('room', async (room) => {
             socket.join(room);
             try {
-                if(io.sockets.adapter.rooms.get(room).size === 1){
+                const newCode = await redisClient.get(room);
+                if(io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {
                     await redisClient.set(room,"Hello world")
                     io.to(room).emit("codeChange","Hello world")
                 }
                 else{
-                    const newCode = await redisClient.get(room);
                     io.to(room).emit('codeChange',newCode);       
                 }
                 
@@ -90,10 +90,9 @@ redisClient.on('error', (err) => {
                     try {
                         // const compressedCode = zlib.gzipSync(code);
                         // await Room.updateOne({ roomId: room }, { code: compressedCode });
-                        console.log("before");
                         await redisClient.set(room,code)    
                         socket.broadcast.to(room).emit('codeChange',code);
-                        console.log(code); 
+                        
                     } catch (error) {
                         console.error("Error updating code:", error);
                     }

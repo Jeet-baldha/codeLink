@@ -12,6 +12,7 @@ import Feedback from '../Sidebar/Feedback';
 import NVideoCall from '../Sidebar/NVedioCall';
 import fileExtensions from '../../Data/FileExtension';
 
+
 function Sidebar({textData}) {
 
     const [Settingwidth, setSettingWidth] = useState(0);
@@ -42,6 +43,8 @@ function Sidebar({textData}) {
         window.URL.revokeObjectURL(url);
     }
 
+    
+     
 
 
     return (

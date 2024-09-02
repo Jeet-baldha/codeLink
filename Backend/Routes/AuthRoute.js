@@ -1,77 +1,78 @@
 import express from 'express';
-import  mongoose from 'mongoose'
+import mongoose from 'mongoose'
 import User from '../Model/User.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 
+
 const router = express.Router();
 const saltRound = 10;
 
 
-router.post('/register', async (req,res) => {
-    
-    const {username,email,password} = req.body;
+router.post('/register', async (req, res) => {
+
+    const { username, email, password } = req.body;
     let jwtTokenKey = process.env.JWT_SECRET_KEY;
-try {
+    try {
 
-    const user = await User.findOne({email: email});
-    
-        if(user){
-            res.send({message:"User alredy exits"})
+        const user = await User.findOne({ email: email });
+
+        if (user) {
+            res.send({ message: "User alredy exits" })
         }
-        else{
+        else {
 
-            bcrypt.hash(password,saltRound, async(err,hash) => {
-                
-                if(err) {
-                console.log(err);
-                res.send(err.message || err);
-            }
-            const newUser = new User({
-                username: username,
-                password: hash,
-                email: email
+            bcrypt.hash(password, saltRound, async (err, hash) => {
+
+                if (err) {
+                    console.log(err);
+                    res.send(err.message || err);
+                }
+                const newUser = new User({
+                    username: username,
+                    password: hash,
+                    email: email
+                })
+
+                const result = await newUser.save();
+
+                let data = {
+                    _id: result._id.toString(),
+                }
+                const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
+                res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken });
             })
-            
-            const result = await newUser.save();
-            
-            let data = {
-                _id:result._id.toString(),
-            }
-            const JWToken = jwt.sign(data,jwtTokenKey, { expiresIn: '24h' });
-            res.send({message:`welcome ${username}`,jsonwebtoken:JWToken});
-        })
+        }
+
+    } catch (error) {
+        res.send({ message: error.message, jsonwebtoken: "" });
     }
-    
-} catch (error) {
-    res.send({message:error.message,jsonwebtoken:""});
-}
 
 })
 
-router.post('/login', async (req,res) => {
+router.post('/login', async (req, res) => {
 
-    const {email,password} = req.body;
+    const { email, password } = req.body;
     let jwtTokenKey = process.env.JWT_SECRET_KEY;
 
     try {
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({ email: email });
 
-        if(!user){
-            res.status(201).send({message:"User not found"});
+        if (!user) {
+            res.status(201).send({ message: "User not found" });
         }
-        else{
-            bcrypt.compare(password, user.password, function(err, result) {
-                if(result){
+        else {
+            bcrypt.compare(password, user.password, function (err, result) {
+                if (result) {
                     let data = {
-                        _id:result._id.toString(),
+                        _id: result._id.toString(),
                     }
-                    const JWToken = jwt.sign(data,jwtTokenKey, { expiresIn: '24h' });
-                    res.send({message:`welcome ${username}`,jsonwebtoken:JWToken});
+                    const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
+                    res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken });
                 }
-                else{
-                    res.status(201).send({message:"invalid password"});
+                else {
+                    res.status(201).send({ message: "invalid password" });
                 }
             });
         }
@@ -97,42 +98,40 @@ router.post('/googleAuthVerify', async (req, res) => {
 
         const tokenData = ticket.getPayload();
 
-        const user = await User.findOne( { 'email' : tokenData.email});
+        const user = await User.findOne({ 'email': tokenData.email });
 
-        if(user){
+        if (user) {
             let data = {
-                _id:user._id.toString(),
+                _id: user._id.toString(),
             }
-            const JWToken = jwt.sign(data,process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
-            res.send({message:`welcome ${tokenData.name}`,jsonwebtoken:JWToken});
+            const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
+            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken });
         }
-        else{
+        else {
             const newUser = new User({
                 username: tokenData.name,
                 email: tokenData.email,
             })
-    
+
             const result = await newUser.save();
 
             let data = {
-                _id:result._id.toString(),
+                _id: result._id.toString(),
             }
-            const JWToken = jwt.sign(data,process.env.JWT_SECRET_KEY, { expiresIn: '24h' });
-            res.send({message:`welcome ${tokenData.name}`,jsonwebtoken:JWToken});
-    
+            const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' });
+            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken });
+
         }
 
-        
+
     } catch (error) {
-        res.send({message:error.message});
+        res.send({ message: error.message });
     }
-
-
 
 })
 
-router.post('/logout', (req,res) => {
-    
+router.post('/logout', (req, res) => {
+
 })
 
 

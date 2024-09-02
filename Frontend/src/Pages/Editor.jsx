@@ -17,7 +17,7 @@ const ENDPOINT = 'http://localhost:3000';
 
 async function importThemes() {
     try {
-        await Promise.all(themes.map(theme => 
+        await Promise.all(themes.map(theme =>
             import(`ace-builds/src-noconflict/theme-${theme.value}`)
         ));
         console.log('All themes have been imported successfully');
@@ -28,7 +28,7 @@ async function importThemes() {
 
 async function importLanguages() {
     try {
-        await Promise.all(languages.map(language => 
+        await Promise.all(languages.map(language =>
             Promise.all([
                 import(`ace-builds/src-noconflict/mode-${language.value}`),
                 import(`ace-builds/src-noconflict/snippets/${language.value}`)
@@ -77,9 +77,9 @@ function Editor() {
 
     useEffect(() => {
         const handleCodeChange = (newCode) => setCode(newCode);
-        
+
         socket.on('codeChange', handleCodeChange);
-        
+
         socket.on('connect', () => {
             console.log('Connected to server');
             socket.emit('room', roomId);
@@ -98,7 +98,7 @@ function Editor() {
 
     useEffect(() => {
         console.log(fontSize);
-    },[fontSize])
+    }, [fontSize])
 
     return (
         <div className='w-full h-full flex overflow-hidden'>
@@ -114,11 +114,13 @@ function Editor() {
                 name="UNIQUE_ID_OF_DIV"
                 width='100%'
                 height='100%'
-                editorProps={{ $blockScrolling: true }}
+                // editorProps={{ $blockScrolling: true }}
                 setOptions={{
-                    
-                    enableLiveAutocompletion: false,
-                    enableSnippets: false, 
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true,
+                    showLineNumbers: true,
+                    tabSize: 2,
                 }}
             />
             <div>

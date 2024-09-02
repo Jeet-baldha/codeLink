@@ -13,6 +13,7 @@
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.3",
     "ace-builds": "^1.33.1",
+    "agora-rtc-react": "^2.3.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "lodash.debounce": "^4.0.8",
