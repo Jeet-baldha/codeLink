@@ -101,7 +101,9 @@ function Editor() {
     }, [fontSize])
 
     return (
-        <div className='w-full h-full flex overflow-hidden'>
+        <>
+
+        <div className='w-full h-full flex sticky top-0'>
             <AceEditor
                 mode={language}
                 placeholder="Write your code here..."
@@ -124,9 +126,10 @@ function Editor() {
                 }}
             />
             <div>
+        </div>
                 <Sidebar textData={code} />
             </div>
-        </div>
+        </>
     );
 }
 

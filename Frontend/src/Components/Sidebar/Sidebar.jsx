@@ -43,14 +43,12 @@ function Sidebar({textData}) {
         window.URL.revokeObjectURL(url);
     }
 
-    
-     
 
 
     return (
         <div className=' flex w-auto'>
 
-            <div className=' w-auto text-white h-svh  bg-dark-grayish-blue  border-dark-blue-black border-t-2 text-center  text-xl z-50'>
+            <div className=' w-auto text-white min-h-screen  bg-dark-grayish-blue  border-dark-blue-black border-t-2 text-center  text-xl z-50'>
                 <div className=''>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4 hover:cursor-pointer' onClick={() => setOpenCodeLinkBox(true)}>
                         <IoMdLink />
@@ -73,7 +71,7 @@ function Sidebar({textData}) {
             <div>
                 <Setting width={Settingwidth} setWidth={setSettingWidth} />
             </div>
-            <div>
+            <div className=''>
                 <NVideoCall width={videoCallwidth} setWidth={setVideoCallWidth} ></NVideoCall>
             </div>
             <div>

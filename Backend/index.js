@@ -63,7 +63,7 @@ redisClient.on('error', (err) => {
             try {
                 const newCode = await redisClient.get(room);
                 if(io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {
-                    await redisClient.set(room,"Hello world")
+                    await redisClient.set(room,"Hello world", {EX: 60*60*24})
                     io.to(room).emit("codeChange","Hello world")
                 }
                 else{
@@ -74,15 +74,6 @@ redisClient.on('error', (err) => {
                 console.log(error);
             }
             
-            // try {
-                //     const compressCode  = await Room.findOne({ roomId: room });
-                
-                //     // const roomData  = zlib.gunzipSync(compressCode.code).toString();
-                
-                //     io.to(room).emit('codeChange', cod);
-                // } catch (error) {
-                    //     console.error("Error finding room:", error);
-                    // }
                 })
 
                 socket.on('codeChange', async (code,room) => {

@@ -15,6 +15,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 
+
+
 const route = createBrowserRouter([
   {
     path: '',
@@ -52,6 +54,8 @@ const route = createBrowserRouter([
   }
 ])
 
+
+// Initialize Agora Client
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
