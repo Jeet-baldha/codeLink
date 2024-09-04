@@ -47,10 +47,8 @@ function SignUp() {
 
         try {
             const data = await axios.post('http://localhost:3000/auth/googleAuthVerify', {token:credentialResponse.credential});
-            
-            alert(data.data.message);
-
-            if (data.data.jsonwebtoken) {
+            if (data.data.success) {
+                alert(data.data.message);
                 localStorage.setItem('authToken', data.data.jsonwebtoken);
             }
 
@@ -68,12 +66,12 @@ function SignUp() {
                 <h1 className=' font-bold text-3xl text-center'>Hello MOTO</h1>
                 <form onSubmit={submitForm} className=' flex flex-col w-96 gap-2 mt-5'>
                     <label className=' text-xl font-semibold'>Username</label>
-                    <input type='text' name='username' value={inputData.username} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black'></input>
+                    <input type='text' name='username' value={inputData.username} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black' required></input>
                     <label className=' text-xl font-semibold'>Email</label>
-                    <input type='email' name='email' value={inputData.email} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black'></input>
+                    <input type='email' name='email' value={inputData.email} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black' required></input>
                     <label className=' text-xl font-semibold'>Password</label>
                     <div className=' flex w-full items-center justify-end'>
-                        <input type={eyeOpen ? 'text' : 'password'} name='password' value={inputData.password} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black w-full'></input>
+                        <input type={eyeOpen ? 'text' : 'password'} name='password' value={inputData.password} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black w-full' required></input>
                         {eyeOpen ? <RiEyeLine className=' absolute mr-3 cursor-pointer text-xl' onClick={() => setEyeOpen(!eyeOpen)} onMouseLeave={() => setEyeOpen(false)} ></RiEyeLine> : <RiEyeCloseLine className=' absolute mr-3 cursor-pointer text-xl' onClick={() => setEyeOpen(!eyeOpen)} ></RiEyeCloseLine>}
                     </div>
                     <button type='submit' className=' bg-dark-blue-black text-white p-2 mt-3 text-xl font-bold rounded-sm '>Sign up</button>
@@ -85,7 +83,6 @@ function SignUp() {
                     <GoogleLogin onSuccess={credentialResponse => {
                             googleAuthVerify(credentialResponse);
                         }}
-
                         onError={() => {
                             console.log('Login Failed');
                         }}

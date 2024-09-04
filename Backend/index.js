@@ -7,8 +7,6 @@ import redis from 'redis'
 import endlUrl from './Controller/endlUrl.js';
 import mongoose from 'mongoose';
 import checkUrl from './Controller/checkUrl.js';
-import createRoom from './Controller/createRoom.js';
-import updateRoomMember from './Controller/updateRoomMember.js';
 import updatePeerId from './Controller/updatePeerId.js';
 import Auth from './Routes/AuthRoute.js'
 
@@ -22,8 +20,6 @@ const redisClient = redis.createClient({
     url: 'redis://127.0.0.1:6379'
 });
 
-
-
 const io = new Server(server, {
     cors: {
         origin: '*'
@@ -34,16 +30,16 @@ mongoose.connect(process.env.MONGODB_URL);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/auth',Auth);  
+app.use('/auth', Auth);
 
 app.get('/', (req, res) => {
     res.send("Welcome");
 });
 
 
-app.get('/geturl',endlUrl)
-app.post('/checkUrl',checkUrl)
-app.post('/updatePeerId',updatePeerId)
+app.get('/geturl', endlUrl)
+app.post('/checkUrl', checkUrl)
+app.post('/updatePeerId', updatePeerId)
 
 redisClient.on('connect', () => {
     console.log('Connected to Redis');
@@ -56,53 +52,43 @@ redisClient.on('error', (err) => {
 (async () => {
     await redisClient.connect();
     io.on('connection', (socket) => {
-    
-    
+
+
         socket.on('room', async (room) => {
             socket.join(room);
             try {
                 const newCode = await redisClient.get(room);
-                if(io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {
-                    await redisClient.set(room,"Hello world", {EX: 60*60*24})
-                    io.to(room).emit("codeChange","Hello world")
+                if (io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {
+                    await redisClient.set(room, "Hello world", { EX: 60 * 60 * 24 })
+                    io.to(room).emit("codeChange", "Hello world")
                 }
-                else{
-                    io.to(room).emit('codeChange',newCode);       
+                else {
+                    io.to(room).emit('codeChange', newCode);
                 }
-                
+
             } catch (error) {
                 console.log(error);
             }
-            
-                })
 
-                socket.on('codeChange', async (code,room) => {
-                    
-                    try {
-                        // const compressedCode = zlib.gzipSync(code);
-                        // await Room.updateOne({ roomId: room }, { code: compressedCode });
-                        await redisClient.set(room,code)    
-                        socket.broadcast.to(room).emit('codeChange',code);
-                        
-                    } catch (error) {
-                        console.error("Error updating code:", error);
-                    }
-                    
-                })
-                
-                
-                socket.on('sendPeer', (room, peerId) => {
-                    console.log(`Received sendPeer event. Room: ${room}, peerId: ${peerId}`);
-                    io.to(room).emit('sendPeer', peerId);
-                    console.log(`Sent peerId ${peerId} to room ${room}`);
-                });
-                
-            });
+        })
+
+        socket.on('codeChange', async (code, room) => {
+
+            try {
+                await redisClient.set(room, code)
+                socket.broadcast.to(room).emit('codeChange', code);
+
+            } catch (error) {
+                console.error("Error updating code:", error);
+            }
+
+        })
+
+    });
 })();
-        
-        
 
-        server.listen(port, () => {
-            console.log('listening on ',port);
-        });
-        
+
+
+server.listen(port, () => {
+    console.log('listening on ', port);
+});

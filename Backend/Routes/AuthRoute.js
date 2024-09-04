@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
         const user = await User.findOne({ email: email });
 
         if (user) {
-            res.send({ message: "User alredy exits" })
+            res.send({ message: "User alredy exits" , success: false });
         }
         else {
 
@@ -41,12 +41,12 @@ router.post('/register', async (req, res) => {
                     _id: result._id.toString(),
                 }
                 const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
-                res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken });
+                res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken, success:true });
             })
         }
 
     } catch (error) {
-        res.send({ message: error.message, jsonwebtoken: "" });
+        res.send({ message: error.message, jsonwebtoken: "" , success:false});
     }
 
 })
@@ -58,27 +58,26 @@ router.post('/login', async (req, res) => {
 
     try {
         const user = await User.findOne({ email: email });
-
         if (!user) {
-            res.status(201).send({ message: "User not found" });
+            res.status(201).send({ message: "User not found", success: false });
         }
         else {
             bcrypt.compare(password, user.password, function (err, result) {
                 if (result) {
                     let data = {
-                        _id: result._id.toString(),
+                        _id: user._id.toString(),
                     }
                     const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
-                    res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken });
+                    res.send({ message: `welcome ${user.username}`, jsonwebtoken: JWToken, success: true });
                 }
                 else {
-                    res.status(201).send({ message: "invalid password" });
+                    res.status(201).send({ message: "invalid password", success:false });
                 }
             });
         }
 
     } catch (error) {
-        res.send(error.message);
+        res.send({ message:error.message, success:false});
     }
 
 })
@@ -105,7 +104,7 @@ router.post('/googleAuthVerify', async (req, res) => {
                 _id: user._id.toString(),
             }
             const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
-            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken });
+            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken, success:true });
         }
         else {
             const newUser = new User({
@@ -119,13 +118,13 @@ router.post('/googleAuthVerify', async (req, res) => {
                 _id: result._id.toString(),
             }
             const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' });
-            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken });
+            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken,success:true });
 
         }
 
 
     } catch (error) {
-        res.send({ message: error.message });
+        res.send({ message: error.message,success:false });
     }
 
 })
