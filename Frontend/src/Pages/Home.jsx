@@ -11,8 +11,12 @@ function Home() {
     const [endurl,setendurl] = useState("");
 
     const handleClick = async () => {
-        const result = await axios.get('http://localhost:3000/geturl');
-        setendurl(result.data);  
+        try {
+            const result = await axios.get('http://localhost:3000/geturl');
+            setendurl(result.data);  
+        } catch (error) {
+            alert(error.message);   
+        }
     }
     
     useEffect(() => {

@@ -57,9 +57,6 @@ function NVideoCall({ width, setWidth }) {
     // play the remote user audio tracks
     audioTracks.forEach((track) => track.play());
     
-    useEffect (() => {
-        console.log(remoteUsers.length);
-    })
 
     const style = {
         width: width + 'px',

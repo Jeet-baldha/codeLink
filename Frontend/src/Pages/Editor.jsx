@@ -110,7 +110,7 @@ function Editor() {
                 theme={theme}
                 wrapEnabled={true}
                 value={code}
-                fontSize={font}
+                fontSize={fontSize}
                 enableLiveAutocompletion={true}
                 onChange={handleChange}
                 name="UNIQUE_ID_OF_DIV"

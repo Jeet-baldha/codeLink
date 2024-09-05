@@ -25,7 +25,7 @@ function Feedback({setOpenFeedback}) {
     }
 
     return (
-        <div className=' absolute w-screen h-screen flex justify-center items-center top-0 right-0 bg-gray-200 bg-opacity-20 z-50'>
+        <div className=' absolute w-screen h-screen bg-opacity-20 z-50 flex items-center justify-center bottom-10 right-0'>
             <div className=' w-96 bg-dark-grayish-blue text-white h-auto z-10  rounded-sm'  >
                 <div className=' float-right mt-1 mr-2 hover:cursor-pointer' onClick={() => setOpenFeedback(false)}><IoIosCloseCircle className=' text-3xl' /></div>
                 <div className=' mt-4 p-4'>

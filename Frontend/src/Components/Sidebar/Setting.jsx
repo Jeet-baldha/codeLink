@@ -56,15 +56,15 @@ function Setting({ width, setWidth }) {
             </div>
             <div className=' px-5'>
                 <h1 className=' text-xl py-2'>Select Your Language: </h1>
-                <Select options={languages} onChange={handleLanguageChange} value={selectedLanguage} defaultValue={ { "value": "plaintext", "label": "Plain Text" }} placeholder="Select an option" className=' bg-white text-black' />
+                <Select options={languages} onChange={handleLanguageChange} value={selectedLanguage} defaultValue={ { "value": "plaintext", "label": "Plain Text" }} placeholder="Select an option" className=' bg-white text-black rounded-sm' />
             </div>
             <div className=' px-5'>
                 <h1 className=' text-xl py-2'>Select Your Theme: </h1>
-                <Select options={themes} onChange={handleThemeChange} value={selectedTheme} placeholder="Select an option" className=' bg-white text-black' />
+                <Select options={themes} onChange={handleThemeChange} value={selectedTheme} placeholder="Select an option" className=' bg-white text-black rounded-sm' />
             </div>
             <div className=' px-5 flex gap-10 py-5 items-center'>
                 <h1 className=' text-xl py-2'>Select Font Size: </h1>
-                <input type='number' value={fontSize} onChange={handleFontSize} step={2} min={0} max={40} className=' w-16 p-2 text-black h-6' />
+                <input type='number' value={fontSize} onChange={handleFontSize} step={2} min={14} max={40} className=' w-16 p-2 text-black h-6 rounded-sm'/>
             </div>
         </div>
     )

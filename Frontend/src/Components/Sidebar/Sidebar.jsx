@@ -5,12 +5,14 @@ import { useSelector } from 'react-redux';
 import userSlice from '../../Store/UserSlice';
 import { MdError } from "react-icons/md";
 import { IoMdSettings, IoMdLink, IoMdDownload, IoMdVideocam, } from "react-icons/io";
+import { SiLeetcode } from "react-icons/si";
 import Setting from '../Sidebar/Setting';
 import VideoCall from '../Sidebar/VideoCall';
 import ShareLink from '../Sidebar/ShareLink';
 import Feedback from '../Sidebar/Feedback';
 import NVideoCall from '../Sidebar/NVedioCall';
 import fileExtensions from '../../Data/FileExtension';
+import LeetCodeProblem from './LeetCodeProblem';
 
 
 function Sidebar({textData}) {
@@ -19,12 +21,14 @@ function Sidebar({textData}) {
     const [videoCallwidth, setVideoCallWidth] = useState(0);
     const [openCodeLinkBox, setOpenCodeLinkBox] = useState(false);
     const [openFeedback, setOpenFeedback] = useState(false);
+    const [leetCodeProblemWidth, setLeetCodeProblemWidth] = useState(false);
     const roomId = useParams().id;
     const selectedLanguage = useSelector( (state) => state.user.language);
     
     useEffect(() => {
         setSettingWidth(0);
         setVideoCallWidth(0);
+        setLeetCodeProblemWidth(0);
     }, [])
     
     const handleDownload = () => {
@@ -53,6 +57,9 @@ function Sidebar({textData}) {
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4 hover:cursor-pointer' onClick={() => setOpenCodeLinkBox(true)}>
                         <IoMdLink />
                     </div>
+                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
+                        <SiLeetcode onClick={ () => setLeetCodeProblemWidth(480)} />
+                    </div>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer ' onClick={() => setVideoCallWidth(320)}>
                         <IoMdVideocam />
                     </div>
@@ -71,6 +78,10 @@ function Sidebar({textData}) {
             <div>
                 <Setting width={Settingwidth} setWidth={setSettingWidth} />
             </div>
+            <div>
+                <LeetCodeProblem width={leetCodeProblemWidth} setWidth={setLeetCodeProblemWidth} />
+            </div>
+
             <div className=''>
                 <NVideoCall width={videoCallwidth} setWidth={setVideoCallWidth} ></NVideoCall>
             </div>

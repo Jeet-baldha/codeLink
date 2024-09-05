@@ -28,7 +28,7 @@ function SignUp() {
             const data = await axios.post('http://localhost:3000/auth/register', inputData);
             alert(data.data.message);
 
-            if (data.data.jsonwebtoken) {
+            if (data.data.successcd) {
                 localStorage.setItem('authToken', data.data.jsonwebtoken);
             }
 
