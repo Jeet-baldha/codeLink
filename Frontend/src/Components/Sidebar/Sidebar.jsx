@@ -21,7 +21,7 @@ function Sidebar({textData}) {
     const [videoCallwidth, setVideoCallWidth] = useState(0);
     const [openCodeLinkBox, setOpenCodeLinkBox] = useState(false);
     const [openFeedback, setOpenFeedback] = useState(false);
-    const [leetCodeProblemWidth, setLeetCodeProblemWidth] = useState(false);
+    const [leetCodeProblemWidth, setLeetCodeProblemWidth] = useState(0);
     const roomId = useParams().id;
     const selectedLanguage = useSelector( (state) => state.user.language);
     

@@ -102,8 +102,7 @@ function Editor() {
 
     return (
         <>
-
-        <div className='w-full h-full flex sticky top-0'>
+        <div className='w-full h-full flex overflow-auto'>
             <AceEditor
                 mode={language}
                 placeholder="Write your code here..."
