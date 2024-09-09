@@ -9,7 +9,7 @@ function App2() {
     const agoraClient = useRTCClient( AgoraRTC.createClient({ codec: "vp8", mode: "rtc" }));
     return (
         <>
-            <div className=' h-screen overflow-hidden'>
+            <div className=' h-screen'>
                 <Navbar className= ' bg-dark-grayish-blue' />
                 <AgoraRTCProvider client={agoraClient}>
                     <Outlet />

@@ -12,7 +12,7 @@ import ShareLink from '../Sidebar/ShareLink';
 import Feedback from '../Sidebar/Feedback';
 import NVideoCall from '../Sidebar/NVedioCall';
 import fileExtensions from '../../Data/FileExtension';
-import LeetCodeProblem from './LeetCodeProblem';
+import LeetCodeProblem from './LeetcodeProblemComponent/LeetCodeProblem';
 
 
 function Sidebar({textData}) {
@@ -54,23 +54,23 @@ function Sidebar({textData}) {
 
             <div className=' w-auto text-white min-h-screen  bg-dark-grayish-blue  border-dark-blue-black border-t-2 text-center  text-xl z-50'>
                 <div className=''>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4 hover:cursor-pointer' onClick={() => setOpenCodeLinkBox(true)}>
+                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4 hover:cursor-pointer' onClick={() => setOpenCodeLinkBox(!openCodeLinkBox)}>
                         <IoMdLink />
                     </div>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
-                        <SiLeetcode onClick={ () => setLeetCodeProblemWidth(480)} />
+                        <SiLeetcode onClick={ () => setLeetCodeProblemWidth( leetCodeProblemWidth == 0 ? 480 : 0)} />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer ' onClick={() => setVideoCallWidth(320)}>
+                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer ' onClick={() => setVideoCallWidth(videoCallwidth == 0 ? 320 : 0)}>
                         <IoMdVideocam />
                     </div>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer' onClick={handleDownload} >
                         <IoMdDownload />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer' onClick={() => setSettingWidth(320)} >
+                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer' onClick={() => setSettingWidth(Settingwidth == 0 ? 320 : 0)} >
                         <IoMdSettings />
                     </div>
                     <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
-                        <MdError onClick={ () => setOpenFeedback(true)} />
+                        <MdError onClick={ () => setOpenFeedback(!openFeedback)} />
                     </div>
                 </div>
 

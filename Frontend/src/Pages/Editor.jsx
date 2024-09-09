@@ -114,7 +114,7 @@ function Editor() {
                 onChange={handleChange}
                 name="UNIQUE_ID_OF_DIV"
                 width='100%'
-                height='100%'
+                height='auto'
                 // editorProps={{ $blockScrolling: true }}
                 setOptions={{
                     enableBasicAutocompletion: true,
