@@ -3,11 +3,11 @@ import { urlList } from './endlUrl.js';
 
 const checkUrl = (req, res) => {
 
-    try {
-        if (urlList.find((url) => url === req.body.url) === undefined) {
-            res.send(false);
+    try { 
+        if (urlList.findIndex((url) => url === req.body.url) === -1) {
+            res.status(404).send(false);
         } else {
-            res.send(true);
+            res.status(200).send(true);
         }
 
     } catch (error) {

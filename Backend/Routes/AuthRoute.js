@@ -15,10 +15,8 @@ router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     let jwtTokenKey = process.env.JWT_SECRET_KEY;
     try {
-
-        const user = await User.findOne({ email: email });
-
-        if (user) {
+        const user = await User.find({$or:[{ email: email },{username: username}]});
+        if (user == []) {
             res.send({ message: "User alredy exits" , success: false });
         }
         else {
@@ -41,7 +39,7 @@ router.post('/register', async (req, res) => {
                     _id: result._id.toString(),
                 }
                 const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
-                res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken, success:true });
+                res.send({ message: `welcome ${username}`, jsonwebtoken: JWToken, success:true ,userName:username});
             })
         }
 
@@ -68,7 +66,7 @@ router.post('/login', async (req, res) => {
                         _id: user._id.toString(),
                     }
                     const JWToken = jwt.sign(data, jwtTokenKey, { expiresIn: '24h' });
-                    res.send({ message: `welcome ${user.username}`, jsonwebtoken: JWToken, success: true });
+                    res.status(200).send({ message: `welcome ${user.username}`, jsonwebtoken: JWToken, success: true, username:user.username});
                 }
                 else {
                     res.status(201).send({ message: "invalid password", success:false });
@@ -104,12 +102,13 @@ router.post('/googleAuthVerify', async (req, res) => {
                 _id: user._id.toString(),
             }
             const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' })
-            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken, success:true });
+            res.status(200).send({ username:tokenData.name, jsonwebtoken: JWToken, success:true });
         }
         else {
             const newUser = new User({
                 username: tokenData.name,
                 email: tokenData.email,
+                googleLogin:true
             })
 
             const result = await newUser.save();
@@ -118,13 +117,13 @@ router.post('/googleAuthVerify', async (req, res) => {
                 _id: result._id.toString(),
             }
             const JWToken = jwt.sign(data, process.env.JWT_SECRET_KEY, { expiresIn: '24h' });
-            res.send({ message: `welcome ${tokenData.name}`, jsonwebtoken: JWToken,success:true });
+            res.status(200).send({  username:tokenData.name, jsonwebtoken: JWToken,success:true });
 
         }
 
 
     } catch (error) {
-        res.send({ message: error.message,success:false });
+        res.status(400).send({ message: error.message,success:false });
     }
 
 })

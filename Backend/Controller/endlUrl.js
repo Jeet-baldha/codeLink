@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import createRoom from './createRoom.js';
 
-let activeUrl = ['1212'];
+let activeUrl = [];
 
 const endlUrl = (req,res) => {
 

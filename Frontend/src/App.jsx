@@ -1,20 +1,12 @@
-import React from 'react'
-import Home from './Pages/Home'
-import Navbar from './Components/Navbar'
-import Footer from './Components/Footer'
 import { Outlet } from 'react-router-dom'
 
 function App() {
-
-  
   return (
-    <>
-      <div className='gredient'>
-      <Navbar  />
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="flex-1">
         <Outlet />
-      <Footer />
-      </div>
-    </> 
+      </main>
+    </div>
   )
 }
 

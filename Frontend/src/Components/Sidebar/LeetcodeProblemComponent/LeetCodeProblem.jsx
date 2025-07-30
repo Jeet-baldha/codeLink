@@ -39,7 +39,7 @@ function LeetCodeProblem({ width, setWidth }) {
 
 
     return (
-        <div className={`  text-white bg-dark-blue-black h-full flex overflow-hidden`} style={{ width: `${width}px` }}>
+        <div className={`  text-white bg-card/80 backdrop-blur h-full flex overflow-hidden`} style={{ width: `${width}px` }}>
             { getProblem ? <GetProblemLink isLoading={isLoading} getProblemContent={getProblemContent}  /> : <ProblemContent width={width} setWidth={setWidth} problem={problemData} setGetProblem={setGetProblem}  />}
         </div>
     )
