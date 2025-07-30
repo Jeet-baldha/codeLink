@@ -8,7 +8,6 @@ const router = new express.Router();
 router.get('/:slug', async (req, res) => {
     try {
         const slug = req.params.slug;
-        console.log(slug);
         const leetcode = new LeetCode();
         const result = await leetcode.problem(slug);
 

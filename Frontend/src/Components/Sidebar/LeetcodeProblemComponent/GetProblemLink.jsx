@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Loder from '../../Loder/Loder';
+
+
 function GetProblemLink({isLoading, getProblemContent}) {
 
     const [link,setLink] = useState("");
@@ -7,8 +9,6 @@ function GetProblemLink({isLoading, getProblemContent}) {
     const submitForm = (e) => {
         e.preventDefault();
         if(e.link != ""){
-            // setLink(e.target.link.value);
-            console.log(link);
             getSlugFromURL(link);
         }   
 
@@ -29,7 +29,6 @@ function GetProblemLink({isLoading, getProblemContent}) {
     
     return (
         <div className=' w-full p-10 overflow-hidden'>
-
             
             <form className=' flex flex-col gap-2 overflow-hidden' onSubmit={submitForm}>
                 <label className=' text-xl font-semibold'>Enter Leetcode Problem Link</label>

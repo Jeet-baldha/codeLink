@@ -4,6 +4,8 @@ import { RiEyeCloseLine } from 'react-icons/ri'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { GoogleLogin } from '@react-oauth/google'
+// import {useSelector, useDispatch} from 'react-redux'
+import {login} from '../../Store/UserSlice.js'
 
 function Login() {
 
@@ -13,6 +15,7 @@ function Login() {
     })
     const [eyeOpen,setEyeOpen] = useState(false);
     const navigate = useNavigate();
+    // const dispatch = useDispatch();
 
     const handleInputData = (e) =>{
         setInputData({...inputData,[e.target.name]:e.target.value});
@@ -23,10 +26,10 @@ function Login() {
 
         try {
             const data = await axios.post('http://localhost:3000/auth/login',inputData);
-            console.log(data.data);
+            alert(data.data.message);
             if(data.data.success){
-                alert(data.data.message);
                 localStorage.setItem('authToken',data.data.jsonwebtoken);
+                dispatch(login({username:data.data.username}));
                 navigate('/');
             }
         } catch (error) {
@@ -41,13 +44,12 @@ function Login() {
     }
 
     const googleAuthVerify = async (credentialResponse) => {
-        console.log(credentialResponse);
-
         try {
             const data = await axios.post('http://localhost:3000/auth/googleAuthVerify', {token:credentialResponse.credential});
             if (data.data.success) {
-                alert(data.data.message);
+                alert("Welcome to Codelink " + data.data.userName);
                 localStorage.setItem('authToken', data.data.jsonwebtoken);
+                dispatch(login({username:data.data.username}));
                 navigate('/');
             }
 
@@ -61,7 +63,7 @@ function Login() {
         <div className=' login-gredient h-svh w-svw flex justify-center items-center'>
             <div className=' bg-white rounded-md p-5'>
                 
-                    <h1 className=' font-bold text-3xl text-center'>Hello MOTO</h1>
+                    <h1 className=' font-bold text-3xl text-center'>Hello Coders!</h1>
                 <form onSubmit={submitForm} className=' flex flex-col w-96 gap-2 mt-5'>
                     <label className=' text-xl font-semibold'>Email</label>
                     <input type='email' name='email' value={inputData.email} onChange={handleInputData} className='bg-gray-200 rounded-sm px-2 py-1 border-black' required></input>

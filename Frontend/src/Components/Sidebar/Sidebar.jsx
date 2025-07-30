@@ -2,15 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import userSlice from '../../Store/UserSlice';
 import { MdError } from "react-icons/md";
 import { IoMdSettings, IoMdLink, IoMdDownload, IoMdVideocam, } from "react-icons/io";
 import { SiLeetcode } from "react-icons/si";
 import Setting from '../Sidebar/Setting';
-import VideoCall from '../Sidebar/VideoCall';
 import ShareLink from '../Sidebar/ShareLink';
 import Feedback from '../Sidebar/Feedback';
-import NVideoCall from '../Sidebar/NVedioCall';
+import VideoCallWrapper from '../Sidebar/VideoCallWrapper';
 import fileExtensions from '../../Data/FileExtension';
 import LeetCodeProblem from './LeetcodeProblemComponent/LeetCodeProblem';
 
@@ -52,25 +50,25 @@ function Sidebar({textData}) {
     return (
         <div className=' flex w-auto'>
 
-            <div className=' w-auto text-white min-h-screen  bg-dark-grayish-blue  border-dark-blue-black border-t-2 text-center  text-xl z-50'>
+            <div className=' w-auto text-white min-h-screen bg-card/80 backdrop-blur border-border border-r text-center text-xl z-50'>
                 <div className=''>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4 hover:cursor-pointer' onClick={() => setOpenCodeLinkBox(!openCodeLinkBox)}>
-                        <IoMdLink />
+                    <div className=' flex justify-center border-border border-b p-4 hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group' onClick={() => setOpenCodeLinkBox(!openCodeLinkBox)}>
+                        <IoMdLink className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
-                        <SiLeetcode onClick={ () => setLeetCodeProblemWidth( leetCodeProblemWidth == 0 ? 480 : 0)} />
+                    <div className=' flex justify-center border-border border-b p-4  hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group'>
+                        <SiLeetcode className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" onClick={ () => setLeetCodeProblemWidth( leetCodeProblemWidth == 0 ? 480 : 0)} />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer ' onClick={() => setVideoCallWidth(videoCallwidth == 0 ? 320 : 0)}>
-                        <IoMdVideocam />
+                    <div className=' flex justify-center border-border border-b p-4  hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group' onClick={() => setVideoCallWidth(videoCallwidth == 0 ? 320 : 0)}>
+                        <IoMdVideocam className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer' onClick={handleDownload} >
-                        <IoMdDownload />
+                    <div className=' flex justify-center border-border border-b p-4  hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group' onClick={handleDownload} >
+                        <IoMdDownload className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer' onClick={() => setSettingWidth(Settingwidth == 0 ? 320 : 0)} >
-                        <IoMdSettings />
+                    <div className=' flex justify-center border-border border-b p-4  hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group' onClick={() => setSettingWidth(Settingwidth == 0 ? 320 : 0)} >
+                        <IoMdSettings className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" />
                     </div>
-                    <div className=' flex justify-center border-dark-blue-black border-b-2 p-4  hover:cursor-pointer'>
-                        <MdError onClick={ () => setOpenFeedback(!openFeedback)} />
+                    <div className=' flex justify-center border-border border-b p-4  hover:cursor-pointer hover:bg-accent/10 hover:scale-105 transition-all duration-200 group'>
+                        <MdError className="text-white group-hover:text-accent group-hover:scale-110 transition-all duration-200" onClick={ () => setOpenFeedback(!openFeedback)} />
                     </div>
                 </div>
 
@@ -83,7 +81,7 @@ function Sidebar({textData}) {
             </div>
 
             <div className=''>
-                <NVideoCall width={videoCallwidth} setWidth={setVideoCallWidth} ></NVideoCall>
+                <VideoCallWrapper width={videoCallwidth} setWidth={setVideoCallWidth} />
             </div>
             <div>
                 {openCodeLinkBox && <ShareLink endUrl={roomId} setOpenCodeLinkBox={setOpenCodeLinkBox} />}

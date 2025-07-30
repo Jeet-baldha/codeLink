@@ -8,6 +8,7 @@ import endlUrl from './Controller/endlUrl.js';
 import mongoose from 'mongoose';
 import checkUrl from './Controller/checkUrl.js';
 import updatePeerId from './Controller/updatePeerId.js';
+import createRoom from './Controller/createRoom.js';
 import Auth from './Routes/AuthRoute.js'
 import leetcode from './Routes/leetCodeProblemRoute.js'
 
@@ -43,6 +44,7 @@ app.get('/', (req, res) => {
 app.get('/geturl', endlUrl)
 app.post('/checkUrl', checkUrl)
 app.post('/updatePeerId', updatePeerId)
+app.post('/createRoom', createRoom)
 
 redisClient.on('connect', () => {
     console.log('Connected to Redis');
@@ -60,7 +62,7 @@ redisClient.on('error', (err) => {
             socket.join(room);
             try {
                 const newCode = await redisClient.get(room);
-                if (io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {
+                if (io.sockets.adapter.rooms.get(room).size === 1 && newCode === null) {                    
                     await redisClient.set(`code:${room}`, "Hello world")
                     await redisClient.expire(`code:${room}`,24*60*60);
                     io.to(room).emit("codeChange", "Hello world")
